@@ -1,17 +1,20 @@
 package com.example.demo.controller;
 
-//import com.dto.UserRegisterRequestDto;
 //import com.dto.UserUpdateDto;
 import com.example.demo.dao.User;
 import com.example.demo.dto.UserLoginRequestDto;
+import com.example.demo.dto.UserRegisterRequestDto;
 import com.example.demo.etc.SessionManager;
 import com.example.demo.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,15 +23,17 @@ public class UserController {
     private final UserService userService;
     private final SessionManager sessionManager;
 
-/*    @PostMapping("/user") // 생성
+    @PostMapping("/user/create") // 생성 //왜인지 모르겠다 LONG타입으로 반환해줘야지만 ajax에서 에러가 나지 않는다
     public Long create(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-        //System.out.println("user" + user.getName());
-        //System.out.println("user" + user.getId());
-        //System.out.println("user" + user.getAddress());
-        return userService.register(userRegisterRequestDto);
+        String s = new String("false");
+        if(userService.register(userRegisterRequestDto).equals(s)) {
+            return 0L;
+        } else {
+            return 1L;
+        }
     }
 
-    @GetMapping("/user/info") // 조회
+/*    @GetMapping("/user/info") // 조회
     public User read(HttpSession httpSession) {
         User user = (User)httpSession.getAttribute("user");
         return userService.findById(user.getNum());
@@ -54,11 +59,8 @@ public class UserController {
     }*/
 
     @PostMapping("/user/login") //로그인
-    public ResponseEntity<?> webLogin(@RequestBody UserLoginRequestDto dto, HttpServletResponse response) {
-        userService.login(dto, response);
-
-        return ResponseEntity.ok().body("login success");
-        //return ResponseEntity.ok().body(userService.login(dto));
+    public User webLogin(@RequestBody UserLoginRequestDto dto, HttpServletResponse response, HttpServletRequest request) {
+        return userService.login(dto, response, request);
     }
 
 }

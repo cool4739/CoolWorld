@@ -1,20 +1,33 @@
 #login_container {
 	float: center;
 	width: 25vw;
-	height: 48vh;
 	text-align: center;
 	margin: 1% auto;
-		border: 5px solid gray;
-		border-radius: 20px;
+	border: 5px solid gray;
+	border-radius: 20px;
 }
 
 a {
 	text-decoration: none;
-	color: #c8c8c8;
+	color: #969696;
 }
 
-.form_control {
+.form-control:focus {
     border-color: gray;
     box-shadow: none;
     outline: none;
+}
+
+.btn.btn-primary {
+    width: 99%;
+    color: white;
+    background-color: #c8c8c8;
+    border: none;
+    margin-top: 2%;
+    margin-bottom: 4%;
+}
+
+.s1 {
+    width: 95%;
+    margin: 10px auto;
 }
