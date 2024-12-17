@@ -25,8 +25,12 @@ public class UserService {
     private final SessionManager sessionManager;
     private final HttpSession httpSession;
 
-    public User findById(Long num) {
-        return userRepository.findById(num).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public User findById(String s) {
+        return userRepository.findById(s).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
+    public User findByEmail(String s) {
+        return userRepository.findByUserEmail(s).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
 
 /*    @Transactional
@@ -50,8 +54,8 @@ public class UserService {
     }*/
 
     @Transactional
-    public void delete(Long num) { //삭제
-        User user = findById(num);
+    public void delete(String s) { //삭제
+        User user = findById(s);
         userRepository.delete(user);
     }
 

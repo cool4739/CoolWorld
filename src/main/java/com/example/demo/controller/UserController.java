@@ -63,6 +63,11 @@ public class UserController {
         return userService.login(dto, response, request);
     }
 
+    @GetMapping("/user/findIdPro/{email}") //아이디찾기
+    public User findIdPro(@PathVariable("email") String email) {
+        return userService.findByEmail(email);
+    }
+
 }
 
 //https://jiwondev.tistory.com/171?category=879790 로그인 유지 참고 사이트

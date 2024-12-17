@@ -1,3 +1,4 @@
+/*   # = id   . = class   */
 #login_container {
 	float: center;
 	width: 25vw;
@@ -30,4 +31,14 @@ a {
 .s1 {
     width: 95%;
     margin: 10px auto;
+}
+
+#line::after {
+    content: '';
+    position: absolute;
+    margin-left: 0.6%;
+    margin-top: 0.1%;
+    width: 1px;
+    height: 20px;
+    background-color: gray;
 }

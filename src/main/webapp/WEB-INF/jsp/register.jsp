@@ -3,15 +3,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<link type="text/css" href="/resources/css/CoolWorld.css?1" rel="stylesheet"><!-- css적용안될때 .css뒤에 ?뒤에 문자열을 아무거나 집어넣자 -->
+	<link type="text/css" href="/resources/css/CoolWorld.css?2" rel="stylesheet"><!-- css적용안될때 .css뒤에 ?뒤에 문자열을 아무거나 집어넣자 -->
 	<style>
-		#login_container {
-        }
 	</style>
 	<script>
         $.ajaxSetup({
@@ -86,7 +84,6 @@
 	</script>
 </head>
 <body>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 	<h2 style="text-align: center; margin-top: 8%; font-family:BernhardFashion BT; font-weight: bold;;">CoolWorld</h2>
 	<div class="container" id="login_container">
 		<h3 style="margin-top: 2%;">회원가입</h3>
@@ -100,7 +97,7 @@
 			    <input type="password" name="user_pw" class="form-control" id="user_pw" placeholder="비밀번호">
 		    </div>
 		    <div class="col-auto">
-			    <label for="isUser_pw" class="form-label"></label>
+			    <label for="user_pwcheck" class="form-label"></label>
 			    <input type="password" name="user_pwcheck" class="form-control" id="user_pwcheck" placeholder="비밀번호 확인">
 		    </div>
 		    <div class="col-auto">
@@ -120,7 +117,9 @@
 		    </div>
 		</form>
 		<div class="s1">
-			<a href="/" style="margin: 40%;">로그인</a>
+			<a href="findId" style="margin: 2%;" id="line">아이디 찾기</a>
+			<a href="findPw" style="margin: 2%;" id="line">비밀번호 찾기</a>
+			<a href="/" style="margin: 2%;">로그인</a>
 		</div>
 	</div>
 </body>

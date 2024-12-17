@@ -3,16 +3,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<link type="text/css" href="/resources/css/CoolWorld.css?1" rel="stylesheet"><!-- css적용안될때 .css뒤에 ?뒤에 문자열을 아무거나 집어넣자 -->
+	<link type="text/css" href="/resources/css/CoolWorld.css?2" rel="stylesheet"><!-- css적용안될때 .css뒤에 ?뒤에 문자열을 아무거나 집어넣자 -->
 	<style>
-        #login_container {
-        }
         #line::after {
         content: '';
         position: absolute;
@@ -89,8 +86,8 @@
 			</button>
 		</div>
 		<div class="s1">
-			<a href="아이디찾기" style="margin: 2%;" id="line">아이디 찾기</a>
-			<a href="비밀번호찾기" style="margin: 2%;" id="line">비밀번호 찾기</a>
+			<a href="findId" style="margin: 2%;" id="line">아이디 찾기</a>
+			<a href="findPw" style="margin: 2%;" id="line">비밀번호 찾기</a>
 			<a href="register" style="margin: 2%;">회원가입</a>
 		</div>
 	</div>
