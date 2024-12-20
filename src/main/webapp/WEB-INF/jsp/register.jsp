@@ -19,6 +19,8 @@
 				if(result == 0) {
 				    alert("이미 사용중인 아이디입니다.");
 				} else if(result == 1) {
+				    alert("이미 사용중인 이메일입니다.");
+				} else if(result == 2) {
 				    alert("회원가입이 완료되었습니다!");
 				    location.href='/';
 				} else {
