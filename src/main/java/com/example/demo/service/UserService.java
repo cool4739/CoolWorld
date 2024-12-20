@@ -67,8 +67,7 @@ public class UserService {
             //세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
             // request.getSession(false)로 하면 세션이 없다면 null을 반환한다.
             HttpSession session = request.getSession();
-            session.setAttribute("user", user); //세션에 로그인 회원 정보 보관
-            session.setMaxInactiveInterval(5); //n초만큼 세션 유지 시간
+            //session.setAttribute("user", user); //세션에 로그인 회원 정보 보관
             System.out.println("login service ok");
             return user;
         } else {
@@ -78,13 +77,15 @@ public class UserService {
         }
     }
 
-    public String register(UserRegisterRequestDto requestDto) {
+    public Long register(UserRegisterRequestDto requestDto) {
         if(userRepository.findByUserId(requestDto.getId()).isPresent()) { //isPresent = Optional의 boolean함수
-            return "false";
+            return 0L;
+        } else if (userRepository.findByUserEmail(requestDto.getEmail()).isPresent()) {
+            return 1L;
         } else {
             User user = requestDto.toEntity();
-            User save = userRepository.save(user);
-            return save.getId();
+            userRepository.save(user);
+            return 2L;
         }
     }
 }

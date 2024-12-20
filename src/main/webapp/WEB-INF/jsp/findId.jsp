@@ -59,7 +59,6 @@
                 }
             });
         });
-
     </script>
 	<style>
 	</style>
@@ -83,7 +82,6 @@
 			<a href="findPw" style="margin: 2%;" id="line">비밀번호 찾기</a>
 			<a href="register" style="margin: 2%;">회원가입</a>
 		</div>
-
 	</div>
 </body>
 </html>

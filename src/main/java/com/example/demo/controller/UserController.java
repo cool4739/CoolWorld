@@ -4,7 +4,6 @@ package com.example.demo.controller;
 import com.example.demo.dao.User;
 import com.example.demo.dto.UserLoginRequestDto;
 import com.example.demo.dto.UserRegisterRequestDto;
-import com.example.demo.etc.SessionManager;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,16 +20,10 @@ import java.util.Objects;
 public class UserController {
 
     private final UserService userService;
-    private final SessionManager sessionManager;
 
     @PostMapping("/user/create") // 생성 //왜인지 모르겠다 LONG타입으로 반환해줘야지만 ajax에서 에러가 나지 않는다
     public Long create(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
-        String s = new String("false");
-        if(userService.register(userRegisterRequestDto).equals(s)) {
-            return 0L;
-        } else {
-            return 1L;
-        }
+        return userService.register(userRegisterRequestDto); // 0 -> id, 1 -> email, 2 -> ok
     }
 
 /*    @GetMapping("/user/info") // 조회

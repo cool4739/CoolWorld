@@ -44,7 +44,7 @@
                     }).done(function(result){ // done - success 와 동일
                         result = JSON.parse(result); //스프링에서 쏴주는 값을 json 형식으로 변경
                         document.getElementById("pw").value = result.pw;
-                        emailjs.sendForm('service_cool4739', 'template_vmztnqn', '#contact-form')
+                        emailjs.sendForm('service_cool4739', 'template_1kjr8ku', '#contact-form')
                             .then(function() {
                                 console.log('SUCCESS!');
                                 alert("이메일 발송!");
@@ -59,7 +59,6 @@
                 }
             });
         });
-
     </script>
 	<style>
 	</style>
@@ -83,7 +82,6 @@
 			<a href="findId" style="margin: 2%;" id="line">아이디 찾기</a>
 			<a href="register" style="margin: 2%;">회원가입</a>
 		</div>
-
 	</div>
 </body>
 </html>
