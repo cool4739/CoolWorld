@@ -1,5 +1,6 @@
 package com.example.demo.etc;
 
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,34 +15,62 @@ public class SessionManager {
 
     public static final String SESSION_COOKIE_NAME = "mySessionId";
     private Map<String, Object> sessionStore = new ConcurrentHashMap<>();
+    private static final int SESSION_TIMEOUT = 1 * 1000; //밀리초
+
+    // 세션 데이터 구조
+    @Getter
+    public static class SessionData {
+        private Object value;
+        private long expirationTime;
+
+        public SessionData(Object value, long expirationTime) {
+            this.value = value;
+            this.expirationTime = expirationTime;
+        }
+
+    }
 
     //## 세션 생성 ##//
     public void createSession(Object value, HttpServletResponse response) {
         //세션 id(UUID)를 생성하고, 값을 세션에 저장
         String sessionId = UUID.randomUUID().toString();
-        sessionStore.put(sessionId, value);
+        long expirationTime = System.currentTimeMillis() + SESSION_TIMEOUT;
+        sessionStore.put(sessionId, new SessionData(value, expirationTime));
 
         //쿠키 생성
         Cookie mySessionCookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
+        mySessionCookie.setHttpOnly(true); //js에서 못고치게
+        mySessionCookie.setMaxAge(50); //쿠키유지시간
+        mySessionCookie.setPath("/"); //쿠키유효범위 /하위 모두 허용
         System.out.println(sessionId);
         response.addCookie(mySessionCookie);
     }
 
-    //## 세션 조회 ##//
+    //## 쿠키 조회 ##//
     public Object getSession(HttpServletRequest request) {
         Cookie sessionCookie = findCookie(request, SESSION_COOKIE_NAME);
-        if (sessionCookie == null) {
-            System.out.println("null");
+        if (sessionCookie == null) { //쿠키찾기
+            System.out.println("sessionCookie null");
             return null;
         }
-        return sessionStore.get(sessionCookie.getValue());
+        Object sessionData = sessionStore.get(sessionCookie.getValue());
+        if (sessionData == null) { //데이터찾기
+            System.out.println("Value null");
+            return null;
+        }
+        System.out.println(sessionCookie.getValue());
+        System.out.println(sessionData.getClass());
+        return sessionData;
     }
 
     //## 세션 만료 ##//
-    public void expire(HttpServletRequest request) {
+    public void expire(HttpServletRequest request, HttpServletResponse response) {
         Cookie sessionCookie = findCookie(request, SESSION_COOKIE_NAME);
         if (sessionCookie != null) {
-            sessionStore.remove(sessionCookie.getValue());
+            sessionStore.remove(sessionCookie.getValue()); //세션데이터삭제
+            sessionCookie.setMaxAge(0); //쿠키 만료시키기
+            sessionCookie.setPath("/");
+            response.addCookie(sessionCookie); //만료된 쿠키를 클라이언트에 보냄으로 삭제
         }
     }
 
