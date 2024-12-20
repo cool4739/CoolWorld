@@ -56,7 +56,7 @@
                         url: "/user/login",
                         data:JSON.stringify(data)
                     }).done(function(){ // done - success 와 동일
-                        location.href='메인화면';
+                        location.href='main';
                     }).fail(function (error) {
                         //alert(JSON.stringify(error));
                         alert('아이디 비밀번호 불일치');
@@ -68,9 +68,7 @@
 </head>
 <body>
 	<h2 style="text-align: center; margin-top: 8%; font-family:BernhardFashion BT; font-weight: bold;;">CoolWorld</h2>
-
 	<form name="userInfo" id="userInfo">
-
 	<div class="container" id="login_container">
 		<div class="col-auto">
 			<label for="user_id" class="form-label"></label>
@@ -91,8 +89,6 @@
 			<a href="register" style="margin: 2%;">회원가입</a>
 		</div>
 	</div>
-
 	</form>
-
 </body>
 </html>
