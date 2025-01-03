@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dao.User;
 import com.example.demo.etc.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +25,8 @@ public class HomeController {
     }
 
     @RequestMapping("/")
-    public String login(HttpServletRequest request) {
-        Object user = sessionManager.getSession(request); //세션에 저장된 'user'객체를 반환(세션쿠키사용)
+    public String login(HttpServletRequest request, HttpServletResponse response) {
+        Object user = sessionManager.getSession(request, response); //세션에 저장된 'user'객체를 반환(세션쿠키사용)
         if (user == null) { // 세션 데이터없음
             System.out.println("no session");
             return "login";

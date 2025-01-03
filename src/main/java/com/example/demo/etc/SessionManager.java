@@ -1,21 +1,30 @@
 package com.example.demo.etc;
 
 import lombok.Getter;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 
 @Component
 public class SessionManager {
 
     public static final String SESSION_COOKIE_NAME = "mySessionId";
     private Map<String, Object> sessionStore = new ConcurrentHashMap<>();
-    private static final int SESSION_TIMEOUT = 1 * 1000; //밀리초
+    private static final int SESSION_TIMEOUT = 60*60 * 1000; //밀리초
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationReady() {
+        System.out.println("Starting session cleanup.");
+        startSessionCleanup();  // 애플리케이션이 준비되면 세션 정리 작업을 시작
+    }
 
     // 세션 데이터 구조
     @Getter
@@ -40,30 +49,40 @@ public class SessionManager {
         //쿠키 생성
         Cookie mySessionCookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
         mySessionCookie.setHttpOnly(true); //js에서 못고치게
-        mySessionCookie.setMaxAge(50); //쿠키유지시간
+        mySessionCookie.setMaxAge(100); //쿠키유지시간
         mySessionCookie.setPath("/"); //쿠키유효범위 /하위 모두 허용
         System.out.println(sessionId);
         response.addCookie(mySessionCookie);
     }
 
     //## 쿠키 조회 ##//
-    public Object getSession(HttpServletRequest request) {
+    public Object getSession(HttpServletRequest request, HttpServletResponse response) {
         Cookie sessionCookie = findCookie(request, SESSION_COOKIE_NAME);
+         Set<String> keySet = sessionStore.keySet();
+        for (String key : keySet) {
+            System.out.println(key + " : " + sessionStore.get(key));
+        }  //sessionStore 체크용
         if (sessionCookie == null) { //쿠키찾기
             System.out.println("sessionCookie null");
             return null;
         }
-        Object sessionData = sessionStore.get(sessionCookie.getValue());
+        SessionData sessionData = (SessionData) sessionStore.get(sessionCookie.getValue());
         if (sessionData == null) { //데이터찾기
             System.out.println("Value null");
             return null;
         }
-        System.out.println(sessionCookie.getValue());
-        System.out.println(sessionData.getClass());
+
+        long newExpirationTime = System.currentTimeMillis() + SESSION_TIMEOUT;
+        sessionData = new SessionData(sessionData.getValue(), newExpirationTime);
+        sessionStore.put(sessionCookie.getValue(), sessionData);
+
+        sessionCookie.setMaxAge(100);
+        response.addCookie(sessionCookie); // 갱신된 쿠키를 클라이언트에 다시 전송
+
         return sessionData;
     }
 
-    //## 세션 만료 ##//
+    //## 쿠키 만료 ##//
     public void expire(HttpServletRequest request, HttpServletResponse response) {
         Cookie sessionCookie = findCookie(request, SESSION_COOKIE_NAME);
         if (sessionCookie != null) {
@@ -72,6 +91,22 @@ public class SessionManager {
             sessionCookie.setPath("/");
             response.addCookie(sessionCookie); //만료된 쿠키를 클라이언트에 보냄으로 삭제
         }
+    }
+
+    public void startSessionCleanup() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                long currentTime = System.currentTimeMillis();
+                sessionStore.entrySet().removeIf(entry -> {
+                    SessionData sessionData = (SessionData) entry.getValue();
+                    return sessionData.expirationTime < currentTime;  // 만료된 세션 찾기
+                });
+            } catch (Exception e) {
+                System.err.println("Error during session cleanup: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.HOURS);  // 1시간마다 정리
     }
 
     // 서블릿에서 세션 객체(Session)를 제공해주긴 하지만, 이해를 돕기위해 직접 구현해보았다.
