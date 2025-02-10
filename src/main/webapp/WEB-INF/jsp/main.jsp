@@ -13,14 +13,35 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet"> <!--위3줄폰트-->
 	<style>
-        #line::after {
-        content: '';
-        position: absolute;
-        margin-left: 0.6%;
-        margin-top: 0.1%;
-        width: 1px;
-        height: 20px;
-        background-color: gray;
+        .post-container1 {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .post-container2 {
+            background: white;
+            padding: 20px;
+            width: 500px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .post-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .post-content {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .post-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #888;
         }
 	</style>
 	<script>
@@ -28,7 +49,16 @@
 </head>
 <body>
 	<h2 style="text-align: center; margin-top: 8%; font-family:Merienda; font-weight: bold;">CoolWorld</h2>
-
-	</div>
+	<div class="post-container1">
+    <div class="post-container2">
+        <div class="post-title">게시물 제목</div>
+        <div class="post-content">여기에 게시물 내용이 일부 표시됩니다. 더보기 기능을 추가할 수도 있습니다.</div>
+        <div class="post-info">
+            <span>조회수: 120</span>
+            <span>댓글: 15</span>
+            <span>공감: 42</span>
+        </div>
+    </div>
+    </div>
 </body>
 </html>
