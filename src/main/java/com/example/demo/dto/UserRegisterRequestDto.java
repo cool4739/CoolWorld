@@ -12,19 +12,19 @@ import lombok.Setter;
 @Setter
 public class UserRegisterRequestDto {
 
-    private String id;
-    private String pw;
+    private String userid;
+    private String userpw;
     private String nickname;
-    private String name;
+    private String username;
     private String email;
     //private Com com; //사용자구분(일반사용자/관리자?)
 
     public User toEntity() {
         return User.builder()
-                .id(this.id)
-                .pw(this.pw)
+                .userid(this.userid)
+                .userpw(this.userpw)
                 .nickname(this.nickname)
-                .name(this.name)
+                .username(this.username)
                 .email(this.email)
                 .build();
     }

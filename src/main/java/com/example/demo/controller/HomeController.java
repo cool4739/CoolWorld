@@ -18,6 +18,20 @@ public class HomeController {
         this.sessionManager = sessionManager;
     }
 
+    //login, main 세션체크 중복되는 코드 따로 분리
+    private String handleSession(HttpServletRequest request, HttpServletResponse response, String noSessionPage, String sessionPage) {
+        Object user = sessionManager.getSession(request, response);
+        if (user == null) {
+            System.out.println("no session");
+            return noSessionPage;
+        } else {
+            SessionManager.SessionData sessionData = (SessionManager.SessionData) user;
+            User loginUser = (User) sessionData.getValue();
+            System.out.println("User ID: " + loginUser.getUserid());
+            return sessionPage;
+        }
+    }
+
     @RequestMapping("/test")
     public String test() {
         System.out.println("test");
@@ -26,16 +40,7 @@ public class HomeController {
 
     @RequestMapping("/")
     public String login(HttpServletRequest request, HttpServletResponse response) {
-        Object user = sessionManager.getSession(request, response); //세션에 저장된 'user'객체를 반환(세션쿠키사용)
-        if (user == null) { // 세션 데이터없음
-            System.out.println("no session");
-            return "login";
-        } else { // 세션있음. 로그인상태 유지
-            SessionManager.SessionData sessionData = (SessionManager.SessionData) user; // SessionData 객체로 캐스팅
-            User loginuser = (User) sessionData.getValue(); //세션에 담긴 User정보를 캐스팅해서 받기
-            System.out.println("User ID: " + loginuser.getId());
-        }
-        return "main";
+        return handleSession(request, response, "login", "main");
     }
 
 /*    @RequestMapping("/")
@@ -65,8 +70,8 @@ public class HomeController {
     }
 
     @RequestMapping("/main")
-    public String main() {
-        return "main";
+    public String main(HttpServletRequest request, HttpServletResponse response) {
+        return handleSession(request, response, "main", "main");
     }
 
 }

@@ -36,10 +36,10 @@ public class Post {
     private String content;
 
     @Column(nullable = false)
-    private Integer like;
+    private int likes;
 
     @Column(nullable = false)
-    private Integer views;
+    private int views;
 
     @Column(nullable = false)
     private LocalDateTime uptime; //YYYY-MM-DD HH:mm:ss

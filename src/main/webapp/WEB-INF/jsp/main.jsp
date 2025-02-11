@@ -14,34 +14,48 @@
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet"> <!--위3줄폰트-->
 	<style>
         .post-container1 {
+            margin: 0 auto;
             font-family: Arial, sans-serif;
             background-color: #f9f9f9;
-            display: flex;
-            justify-content: center;
             padding: 20px;
+            width: 50%;
+            min-width: 500px;
         }
         .post-container2 {
+            margin: 0 auto;
             background: white;
             padding: 20px;
-            width: 500px;
+            width: 50%;
+            min-width: 250px;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         .post-title {
+            overflow:hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             font-size: 20px;
             font-weight: bold;
             margin-bottom: 10px;
         }
         .post-content {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow:hidden;
+            text-overflow: ellipsis;
             font-size: 14px;
             color: #555;
             margin-bottom: 15px;
         }
         .post-info {
+            overflow:hidden;
+            text-overflow: ellipsis;
             display: flex;
             justify-content: space-between;
             font-size: 12px;
             color: #888;
+            white-space: nowrap;
         }
 	</style>
 	<script>
@@ -52,11 +66,11 @@
 	<div class="post-container1">
     <div class="post-container2">
         <div class="post-title">게시물 제목</div>
-        <div class="post-content">여기에 게시물 내용이 일부 표시됩니다. 더보기 기능을 추가할 수도 있습니다.</div>
+        <div class="post-content">게시물 내용</div>
         <div class="post-info">
-            <span>조회수: 120</span>
-            <span>댓글: 15</span>
-            <span>공감: 42</span>
+            <span>조회수: xxx</span>
+            <span>댓글: yyy</span>
+            <span>공감: zzz</span>
         </div>
     </div>
     </div>

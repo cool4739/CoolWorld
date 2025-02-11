@@ -62,7 +62,7 @@ public class UserService {
     public User login(UserLoginRequestDto requestDto, HttpServletResponse response, HttpServletRequest request) {
         User user = userRepository.findByUserId(requestDto.getId())
                 .orElseThrow(() -> new IllegalCallerException("테이블에 유저가 없습니다"));
-        if (user.getPw().equals(requestDto.getPw())) { //서버데이터 equals 입력한것
+        if (user.getUserpw().equals(requestDto.getPw())) { //서버데이터 equals 입력한것
             sessionManager.createSession(user, response); //session manager 통해 세션을 생성하고, 회원 데이터 보관
             //세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
             // request.getSession(false)로 하면 세션이 없다면 null을 반환한다.
@@ -78,7 +78,7 @@ public class UserService {
     }
 
     public Long register(UserRegisterRequestDto requestDto) {
-        if(userRepository.findByUserId(requestDto.getId()).isPresent()) { //isPresent = Optional의 boolean함수
+        if(userRepository.findByUserId(requestDto.getUserid()).isPresent()) { //isPresent = Optional의 boolean함수
             return 0L;
         } else if (userRepository.findByUserEmail(requestDto.getEmail()).isPresent()) {
             return 1L;
