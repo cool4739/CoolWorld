@@ -7,7 +7,7 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<link type="text/css" href="/resources/css/CoolWorld.css?2" rel="stylesheet"><!-- css적용안될때 .css뒤에 ?뒤에 문자열을 아무거나 집어넣자 -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,6 @@
 	<style>
         .post-container1 {
             margin: 0 auto;
-            font-family: Arial, sans-serif;
             background-color: #f9f9f9;
             padding: 20px;
             width: 50%;
@@ -58,21 +57,74 @@
             white-space: nowrap;
         }
 	</style>
-	<script>
-	</script>
+    <script>
+        $.ajaxSetup({
+            dataType : "text",
+            contentType: 'application/json; charset=utf-8',
+			success:function(result){
+				//alert(result);
+			},
+			error: function (jqXHR) {
+                //alert("jqXHR status code:"+jqXHR.status+" message:"+jqXHR.responseText);
+            }
+		});//ajaxSetup
+        $(document).ready(function () {
+            function addPost(title, content, views, comments, likes) {
+                let newPost = `
+                    <div class="post-container2">
+                        <div class="post-title">${title}</div>
+                        <div class="post-content">${content}</div>
+                        <div class="post-info">
+                            <span>조회수: ${views}</span>
+                            <span>댓글: ${comments}</span>
+                            <span>공감: ${likes}</span>
+                        </div>
+                    </div>
+                `;
+                $(".post-container1").append(newPost); // 게시물 리스트에 추가
+            }
+
+            function loadNewPosts() {
+                $.ajax({
+                    url: "/getNewPosts", // 서버의 엔드포인트
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        data.forEach(post => {
+                            addPost(post.title, post.content, post.views, post.comments, post.likes);
+                        });
+                    },
+                    error: function (err) {
+                        console.error("게시물을 불러오는 중 오류 발생:", err);
+                    }
+                });
+            }
+
+            loadNewPosts(); //게시물 로드
+
+            //setInterval(loadNewPosts, 5000); // 5초마다 새로운 게시물 확인
+        });
+    </script>
 </head>
 <body>
-	<h2 style="text-align: center; margin-top: 8%; font-family:Merienda; font-weight: bold;">CoolWorld</h2>
+    <div class="post-container1" style="margin-top: 8%; background-color:white; padding: 0px; display: flex;">
+	    <h2 style="text-align: left; font-family: Merienda; font-weight: bold; width: 50%;">CoolWorld</h2>
+		<div class="s1" style="text-align: right; width: 50%;">
+			<a href="mypage" style="margin: 2%;" id="line">마이페이지</a>
+			<a href="newpost" style="margin: 2%;" id="line">게시물작성</a>
+			<a href="" style="margin: 2%;">로그아웃</a>
+		</div>
+	</div>
 	<div class="post-container1">
-    <div class="post-container2">
-        <div class="post-title">게시물 제목</div>
-        <div class="post-content">게시물 내용</div>
-        <div class="post-info">
-            <span>조회수: xxx</span>
-            <span>댓글: yyy</span>
-            <span>공감: zzz</span>
+        <div class="post-container2">
+            <div class="post-title">게시물 제목</div>
+            <div class="post-content">게시물 내용</div>
+            <div class="post-info">
+                <span>조회수: xxx</span>
+                <span>댓글: yyy</span>
+                <span>공감: zzz</span>
+            </div>
         </div>
-    </div>
     </div>
 </body>
 </html>
