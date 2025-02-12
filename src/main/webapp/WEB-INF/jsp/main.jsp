@@ -77,7 +77,7 @@
                         <div class="post-info">
                             <span>조회수: ${views}</span>
                             <span>댓글: ${comments}</span>
-                            <span>공감: ${likes}</span>
+                            <span class="like-button" data-liked="false">❤️ 공감: ${likes}</span>
                         </div>
                     </div>
                 `;
@@ -102,7 +102,29 @@
 
             loadNewPosts(); //게시물 로드
 
-            //setInterval(loadNewPosts, 5000); // 5초마다 새로운 게시물 확인
+            $(document).on("click", ".like-button", function () {
+                let postId = $(this).closest(".post-container2").attr("data-post-id"); // 게시물 ID 가져오기
+                let isLiked = $(this).attr("data-liked") === "true"; // 현재 좋아요 상태 확인
+                let likeCount = parseInt($(this).text().replace(/\D/g, "")); // 숫자만 추출
+
+                $.ajax({
+                    url: "/updateLike",
+                    method: "POST",
+                    data: { postId: postId, liked: !isLiked },
+                    success: function (response) {
+                        console.log("좋아요 상태 업데이트 완료");
+                    },
+                    error: function (err) {
+                        console.error("서버 오류:", err);
+                    }
+                });
+
+                if (isLiked) { // OFF
+                    $(this).attr("data-liked", "false").css("color", "#888").text(`🖤 공감: ${likeCount}`);
+                } else { // ON
+                    $(this).attr("data-liked", "true").css("color", "red").text(`❤️ 공감: ${likeCount + 1}`);
+                }
+            });
         });
     </script>
 </head>
@@ -122,7 +144,7 @@
             <div class="post-info">
                 <span>조회수: xxx</span>
                 <span>댓글: yyy</span>
-                <span>공감: zzz</span>
+                <span class="like-button" data-liked="false">❤️ 공감: zzz</span>
             </div>
         </div>
     </div>
