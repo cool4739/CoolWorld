@@ -46,7 +46,7 @@
                         url: "/user/findIdPro/" + $('#email').val(),
                     }).done(function(result){ // done - success 와 동일
                         result = JSON.parse(result); //스프링에서 쏴주는 값을 json 형식으로 변경
-                        document.getElementById("id").value = result.id;
+                        document.getElementById("id").value = result.userid;
                         emailjs.sendForm('service_cool4739', 'template_vmztnqn', '#contact-form')
                             .then(function() {
                                 console.log('SUCCESS!');

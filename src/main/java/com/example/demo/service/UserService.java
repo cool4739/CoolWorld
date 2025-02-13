@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dao.UserKey;
 import com.example.demo.dto.UserLoginRequestDto;
 //import com.dto.UserRegisterRequestDto;
 //import com.dto.UserUpdateDto;
@@ -9,7 +10,6 @@ import com.example.demo.dto.UserRegisterRequestDto;
 import com.example.demo.etc.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +30,10 @@ public class UserService {
     }
 
     public User findByEmail(String s) {
-        return userRepository.findByUserEmail(s).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        UserKey userKey = new UserKey();
+        userKey.setEmail(s);
+        System.out.println(userRepository.findByUserEmail1(userKey).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다.")));
+        return userRepository.findByUserEmail1(userKey).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
 
 /*    @Transactional
@@ -60,9 +63,9 @@ public class UserService {
     }
 
     public User login(UserLoginRequestDto requestDto, HttpServletResponse response, HttpServletRequest request) {
-        User user = userRepository.findByUserId(requestDto.getId())
+        User user = userRepository.findByUserId(requestDto.getUserKey())
                 .orElseThrow(() -> new IllegalCallerException("테이블에 유저가 없습니다"));
-        if (user.getUserpw().equals(requestDto.getPw())) { //서버데이터 equals 입력한것
+        if (user.getUserpw().equals(requestDto.getUserpw())) { //서버데이터 equals 입력한것
             sessionManager.createSession(user, response); //session manager 통해 세션을 생성하고, 회원 데이터 보관
             //세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성
             // request.getSession(false)로 하면 세션이 없다면 null을 반환한다.
@@ -71,18 +74,22 @@ public class UserService {
             System.out.println("login service ok");
             return user;
         } else {
-            System.out.println(requestDto.getId());
-            System.out.println(requestDto.getPw());
+            System.out.println(requestDto.getUserKey());
+            System.out.println(requestDto.getUserpw());
             throw new IllegalCallerException("패스워드불일치");
         }
     }
 
     public Long register(UserRegisterRequestDto requestDto) {
-        if(userRepository.findByUserId(requestDto.getUserid()).isPresent()) { //isPresent = Optional의 boolean함수
+        System.out.println("service");
+        if(userRepository.findByUserId(requestDto.getUserKey()).isPresent()) { //isPresent = Optional의 boolean함수
+            System.out.println("service2");
             return 0L;
-        } else if (userRepository.findByUserEmail(requestDto.getEmail()).isPresent()) {
+        } else if (userRepository.findByUserEmail1(requestDto.getUserKey()).isPresent()) {
+            System.out.println("service3");
             return 1L;
         } else {
+            System.out.println("service4");
             User user = requestDto.toEntity();
             userRepository.save(user);
             return 2L;

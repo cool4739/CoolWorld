@@ -102,7 +102,7 @@
 
             loadNewPosts(); //게시물 로드
 
-            $(document).on("click", ".like-button", function () {
+            $(document).on("click", ".like-button", function () { //좋아요관련
                 let postId = $(this).closest(".post-container2").attr("data-post-id"); // 게시물 ID 가져오기
                 let isLiked = $(this).attr("data-liked") === "true"; // 현재 좋아요 상태 확인
                 let likeCount = parseInt($(this).text().replace(/\D/g, "")); // 숫자만 추출
@@ -125,6 +125,22 @@
                     $(this).attr("data-liked", "true").css("color", "red").text(`❤️ 공감: ${likeCount + 1}`);
                 }
             });
+
+            $("a#logoutBtn").click(function (e) { //로그아웃
+                e.preventDefault(); // 기본 링크 이동 방지
+
+                $.ajax({
+                    url: "/logout",
+                    type: "POST",
+                    success: function (response) {
+                        window.location.href = "/";
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("로그아웃 실패:", error);
+                        alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+                    }
+                });
+            });
         });
     </script>
 </head>
@@ -134,7 +150,7 @@
 		<div class="s1" style="text-align: right; width: 50%;">
 			<a href="mypage" style="margin: 2%;" id="line">마이페이지</a>
 			<a href="newpost" style="margin: 2%;" id="line">게시물작성</a>
-			<a href="" style="margin: 2%;">로그아웃</a>
+			<a href="#" id="logoutBtn" style="margin: 2%;">로그아웃</a>
 		</div>
 	</div>
 	<div class="post-container1">

@@ -71,7 +71,13 @@ public class HomeController {
 
     @RequestMapping("/main")
     public String main(HttpServletRequest request, HttpServletResponse response) {
-        return handleSession(request, response, "main", "main");
+        return handleSession(request, response, "login", "main");
+    }
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        sessionManager.expire(request, response);
+        return "login";
     }
 
 }

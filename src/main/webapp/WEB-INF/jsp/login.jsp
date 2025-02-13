@@ -42,8 +42,10 @@
                 } else {
                     event.preventDefault(); //불필요한 페이지새로고침 방지
                     const data = {
-                        id: $('#user_id').val(),
-                        pw: $('#user_pw').val(),
+                        userKey: {
+                            userid: $('#user_id').val()
+                        },
+                        userpw: $('#user_pw').val()
                     };
                     $.ajax({
                         type: "POST",
@@ -53,7 +55,7 @@
                         location.href='main';
                     }).fail(function (error) {
                         //alert(JSON.stringify(error));
-                        alert('아이디 비밀번호 불일치');
+                        alert('존재하지 않거나 올바르지 않은 계정입니다');
                     });
                 }
             });

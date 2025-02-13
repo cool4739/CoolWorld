@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.example.demo.dao.UserKey;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class UserLoginRequestDto {
 
-    private String id;
-    private String pw;
+    private UserKey userKey;
+    private String userpw;
 
 }

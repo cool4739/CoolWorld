@@ -5,7 +5,9 @@ import lombok.*;
 import java.io.Serializable;
 
 @EqualsAndHashCode
-public class UserId implements Serializable {
+@Getter
+@Setter
+public class UserKey implements Serializable {
 
     private String userid;
     private String email;

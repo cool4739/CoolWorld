@@ -68,11 +68,13 @@
                 } else {
                     event.preventDefault();
                     const data = {
-                        id: $('#user_id').val(),
-                        pw: $('#user_pw').val(),
-                        name: $('#user_name').val(),
-                        nickname: $('#user_nick').val(),
-                        email: $('#user_email').val(),
+                        userKey: {
+                            userid: $('#user_id').val(),
+                            email: $('#user_email').val()
+                        },
+                        userpw: $('#user_pw').val(),
+                        username: $('#user_name').val(),
+                        nickname: $('#user_nick').val()
                      };
                      $.ajax({
                         type: "POST",

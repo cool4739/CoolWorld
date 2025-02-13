@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.dao.User;
+import com.example.demo.dao.UserKey;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,20 +13,19 @@ import lombok.Setter;
 @Setter
 public class UserRegisterRequestDto {
 
-    private String userid;
+    private UserKey userKey;
     private String userpw;
     private String nickname;
     private String username;
-    private String email;
     //private Com com; //사용자구분(일반사용자/관리자?)
 
     public User toEntity() {
         return User.builder()
-                .userid(this.userid)
+                .userid(this.userKey.getUserid())
                 .userpw(this.userpw)
                 .nickname(this.nickname)
                 .username(this.username)
-                .email(this.email)
+                .email(this.userKey.getEmail())
                 .build();
     }
 }
