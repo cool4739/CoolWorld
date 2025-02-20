@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor //@Builder를 이용하기 위해 @AllArgsConstructor 와 @NoArgsConstructor 를 같이 처리해야 컴파일 에러가 발생하지 않음
 @AllArgsConstructor
 @Builder
-@IdClass(PostId.class)//복합키 사용을 위함. 키의 재사용을위해 @EmbeddedId를 하지않고 @IdClass를 선택했다
+@IdClass(PostKey.class)//복합키 사용을 위함. 키의 재사용을위해 @EmbeddedId를 하지않고 @IdClass를 선택했다
 public class Post {
 
     @Id
@@ -28,9 +28,6 @@ public class Post {
 
     @Column(nullable = false)
     private String nickname;
-
-    @Column(nullable = false)
-    private String title;
 
     @Column(nullable = false)
     private String content;

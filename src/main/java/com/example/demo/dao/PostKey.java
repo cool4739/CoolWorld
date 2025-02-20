@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 @EqualsAndHashCode
-public class PostId implements Serializable {
+public class PostKey implements Serializable {
 
     private String postid;
     private String userid;

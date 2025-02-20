@@ -15,7 +15,6 @@
 	<style>
 	</style>
     <script>
-
     </script>
 </head>
 <body>
@@ -29,7 +28,11 @@
 	</div>
 	<div class="post-container1">
         <div class="post-container2">
-
+        <h3 style="text-align: center;">게시물 작성</h3>
+        <form action="submitPost" method="POST">
+            <textarea name="content" class="input-field" placeholder="게시물 내용을 입력하세요" rows="5" required></textarea>
+            <button type="submit" class="btn btn-primary">작성 완료</button>
+        </form>
         </div>
     </div>
 </body>
