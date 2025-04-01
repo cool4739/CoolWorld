@@ -15,25 +15,59 @@
 	<style>
 	</style>
     <script>
+        $.ajaxSetup({
+            dataType : "text",
+            contentType: 'application/json; charset=utf-8',
+			success:function(result){
+				if(result == 0) {
+				    alert("다시 로그인해주세요.");
+				} else if(result == 1) {
+				    alert("성공적으로 작성되었습니다.");
+				}
+			},
+			error: function (jqXHR) {
+                //alert("jqXHR status code:"+jqXHR.status+" message:"+jqXHR.responseText);
+            }
+		});//ajaxSetup
+        $(document).ready(function(){
+            $("#postInfo").submit(function(event) {
+                event.preventDefault(); //불필요한 페이지새로고침 방지
+                const data = {
+                    content: $('#content').val()
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/post/create",
+                    data:JSON.stringify(data)
+                }).done(function(){ // done - success 와 동일
+                    location.href='/';
+                }).fail(function (error) {
+                    //alert(JSON.stringify(error));
+                    alert('잘못된 접근입니다');
+                });
+            });
+        });
     </script>
 </head>
 <body>
     <div class="post-container1" style="margin-top: 8%; background-color:white; padding: 0px; display: flex;">
-	    <h2 style="text-align: left; font-family: Merienda; font-weight: bold; width: 50%;">CoolWorld</h2>
+    <a href="main" style="text-align: left; font-family: Merienda; font-weight: bold; width: 50%; color:black;">
+        <h2 style="font-weight: bold;">CoolWorld</h2>
+    </a>
 		<div class="s1" style="text-align: right; width: 50%;">
 			<a href="mypage" style="margin: 2%;" id="line">마이페이지</a>
 			<a href="newpost" style="margin: 2%;" id="line">게시물작성</a>
 			<a href="#" id="logoutBtn" style="margin: 2%;">로그아웃</a>
 		</div>
 	</div>
+	<form name="postInfo" id="postInfo">
 	<div class="post-container1">
         <div class="post-container2">
-        <h3 style="text-align: center;">게시물 작성</h3>
-        <form action="submitPost" method="POST">
-            <textarea name="content" class="input-field" placeholder="게시물 내용을 입력하세요" rows="5" required></textarea>
+        <h4 style="text-align: center;">게시물 작성</h3>
+            <textarea id="content" name="content" class="input-field" placeholder="내용을 입력하세요" rows="5" required></textarea>
             <button type="submit" class="btn btn-primary">작성 완료</button>
-        </form>
         </div>
     </div>
+    </form>
 </body>
 </html>

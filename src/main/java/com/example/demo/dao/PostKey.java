@@ -1,10 +1,14 @@
 package com.example.demo.dao;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 @EqualsAndHashCode
+@Getter
+@Setter
 public class PostKey implements Serializable {
 
     private String postid;

@@ -84,15 +84,15 @@ public class UserService {
         System.out.println("service");
         if(userRepository.findByUserId(requestDto.getUserKey()).isPresent()) { //isPresent = Optional의 boolean함수
             System.out.println("service2");
-            return 0L;
+            return 0L; //중복id
         } else if (userRepository.findByUserEmail1(requestDto.getUserKey()).isPresent()) {
             System.out.println("service3");
-            return 1L;
+            return 1L; //중복email
         } else {
             System.out.println("service4");
             User user = requestDto.toEntity();
             userRepository.save(user);
-            return 2L;
+            return 2L; //성공
         }
     }
 }

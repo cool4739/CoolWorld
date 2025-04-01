@@ -32,16 +32,16 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
+    @Column
     private int likes;
 
-    @Column(nullable = false)
+    @Column
     private int views;
 
     @Column(nullable = false)
     private LocalDateTime uptime; //YYYY-MM-DD HH:mm:ss
 
-    @Column(nullable = false)
+    @Column
     private String imagepath;
 
 }
