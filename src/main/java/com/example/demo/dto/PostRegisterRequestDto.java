@@ -17,12 +17,15 @@ public class PostRegisterRequestDto {
 
     private String content;
 
-    public Post toEntity(String postId, String userId, String nickName) {
+    public Post toEntity(Long postId, String userId, String nickName) {
         return Post.builder()
                 .postid(postId)
                 .userid(userId)
                 .nickname(nickName)
                 .content(this.content)
+                .likes(0L)
+                .views(0L)
+                .comments(0L)
                 .uptime(LocalDateTime.now())
                 .build();
     }

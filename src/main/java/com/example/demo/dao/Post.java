@@ -1,9 +1,6 @@
 package com.example.demo.dao;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +17,7 @@ public class Post {
 
     @Id
     @Column(nullable = false) //DB Column을 명시
-    private String postid;
+    private Long postid; //복합키에 @GeneratedValue 사용불가
 
     @Id
     @Column(nullable = false)
@@ -29,14 +26,17 @@ public class Post {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String content;
 
     @Column
-    private int likes;
+    private Long likes;
 
     @Column
-    private int views;
+    private Long views;
+
+    @Column
+    private Long comments;
 
     @Column(nullable = false)
     private LocalDateTime uptime; //YYYY-MM-DD HH:mm:ss

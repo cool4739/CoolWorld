@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 public class PostKey implements Serializable {
 
-    private String postid;
+    private Long postid;
     private String userid;
 
     // 기본 생성자와 getter는 Lombok @Getter로 자동 생성

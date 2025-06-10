@@ -44,7 +44,13 @@ a {
 }
 
 /* post */
-
+.post-container0 {
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    width: 50%;
+    min-width: 500px;
+}
 .post-container1 {
     margin: 0 auto;
     background-color: #f9f9f9;
@@ -53,7 +59,7 @@ a {
     min-width: 500px;
 }
 .post-container2 {
-    margin: 0 auto;
+    margin: 1% auto;
     background: white;
     padding: 20px;
     width: 50%;

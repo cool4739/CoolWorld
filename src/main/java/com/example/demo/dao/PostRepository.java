@@ -6,8 +6,11 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
-public interface PostRepository extends JpaRepository<Post, String> {
+public interface PostRepository extends JpaRepository<Post, PostKey> {
     // 현재 가장 큰 postid 찾기
-    @Query("SELECT COALESCE(MAX(CAST(p.postid AS int)), 0) FROM Post p")
-    int findMaxPostId();
+    @Query("SELECT COALESCE(MAX(p.postid), 0) FROM Post p")
+    Long findMaxPostId();
+
+    @Query("SELECT p FROM Post p WHERE p.postid = :postid")
+    Optional<Post> findByPostId(@Param("postid") Long postid);
 }

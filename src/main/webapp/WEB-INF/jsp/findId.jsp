@@ -20,7 +20,7 @@
     </script>
     <script type="text/javascript">
         $.ajaxSetup({
-            dataType : "text",
+            dataType : "json",
             contentType: 'application/json; charset=utf-8',
 			success:function(result){
 				//alert(result);
@@ -45,7 +45,7 @@
                         type: "GET",
                         url: "/user/findIdPro/" + $('#email').val(),
                     }).done(function(result){ // done - success 와 동일
-                        result = JSON.parse(result); //스프링에서 쏴주는 값을 json 형식으로 변경
+                        //result = JSON.parse(result); //스프링에서 쏴주는 값을 json 형식으로 변경, 이미 json이라 주석처리
                         document.getElementById("id").value = result.userid;
                         emailjs.sendForm('service_cool4739', 'template_vmztnqn', '#contact-form')
                             .then(function() {

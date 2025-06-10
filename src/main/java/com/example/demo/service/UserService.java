@@ -25,8 +25,12 @@ public class UserService {
     private final SessionManager sessionManager;
     private final HttpSession httpSession;
 
-    public User findById(String s) {
-        return userRepository.findById(s).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public User findById(String userid) {
+        System.out.println(userid);
+        UserKey userKey = new UserKey();
+        userKey.setUserid(userid);
+        System.out.println(userKey);
+        return userRepository.findByUserId(userKey).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
 
     public User findByEmail(String s) {
@@ -94,5 +98,9 @@ public class UserService {
             userRepository.save(user);
             return 2L; //성공
         }
+    }
+
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        sessionManager.expire(request, response);
     }
 }

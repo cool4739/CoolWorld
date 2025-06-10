@@ -16,7 +16,7 @@
 	</style>
 	<script>
         $.ajaxSetup({
-            dataType : "text",
+            dataType : "json",
             contentType: 'application/json; charset=utf-8',
 			success:function(result){
 				//alert(result);

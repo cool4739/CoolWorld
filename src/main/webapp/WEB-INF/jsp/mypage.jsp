@@ -19,35 +19,25 @@
             dataType : "json",
             contentType: 'application/json; charset=utf-8',
 			success:function(result){
-    	        if (result === 0) {
-                    alert('다시 로그인해주세요.');
-                } else if (typeof result === 'number' && result > 0) {
-                    alert('성공적으로 작성되었습니다.');
-                    location.href='/';
-                } else {
-                    alert('알 수 없는 오류가 발생했습니다.');
-                }
 			},
 			error: function (jqXHR) {
                 //alert("jqXHR status code:"+jqXHR.status+" message:"+jqXHR.responseText);
             }
 		});//ajaxSetup
+		const userid = "${userid}";
         $(document).ready(function(){
-            $("#postInfo").submit(function(event) {
-                event.preventDefault(); //불필요한 페이지새로고침 방지
-                const data = {
-                    content: $('#content').val()
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "/post/create",
-                    data:JSON.stringify(data)
-                }).done(function(){ // done - success 와 동일
-
-                }).fail(function (error) {
-                    //alert(JSON.stringify(error));
-                    alert('잘못된 접근입니다');
-                });
+            $.ajax({
+                type: "GET",
+                url: "/user/mypage/" + userid,
+            }).done(function(data){ // done - success 와 동일
+                let fields = $(".input-field");
+                $(fields[0]).append(data.userid);
+                $(fields[1]).append(data.username);
+                $(fields[2]).append(data.nickname);
+                $(fields[3]).append(data.email);
+            }).fail(function (error) {
+                //alert(JSON.stringify(error));
+                alert('게시물 로드 오류');
             });
         });
     </script>
@@ -66,9 +56,16 @@
 	<form name="postInfo" id="postInfo">
 	<div class="post-container1">
         <div class="post-container2">
-        <h4 style="text-align: center;">게시물 작성</h4>
-            <textarea id="content" name="content" class="input-field" placeholder="내용을 입력하세요" rows="5" required></textarea>
-            <button type="submit" class="btn btn-primary">작성 완료</button>
+        <h4 style="text-align: center;">내 정보
+			<a href="#" style="margin: 2%;" id="line">팔로워</a>
+            <a href="#" id="logoutBtn" style="margin: 2%;">팔로우</a>
+        </h4>
+        <div class="input-field"><strong>아이디:</strong></div>
+        <div class="input-field"><strong>성함:</strong></div>
+        <div class="input-field"><strong>닉네임:</strong></div>
+        <div class="input-field"><strong>이메일:</strong></div>
+        <button type="button" class="btn btn-primary">내 정보 변경</button>
+        <button type="button" class="btn btn-primary">내가 작성한 글</button>
         </div>
     </div>
     </form>

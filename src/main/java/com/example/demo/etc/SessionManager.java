@@ -49,7 +49,7 @@ public class SessionManager {
         //쿠키 생성
         Cookie mySessionCookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
         mySessionCookie.setHttpOnly(true); //js에서 못고치게
-        mySessionCookie.setMaxAge(100); //쿠키유지시간
+        mySessionCookie.setMaxAge(3600); //쿠키유지시간
         mySessionCookie.setPath("/"); //쿠키유효범위 /하위 모두 허용
         System.out.println(sessionId);
         response.addCookie(mySessionCookie);
@@ -76,7 +76,7 @@ public class SessionManager {
         sessionData = new SessionData(sessionData.getValue(), newExpirationTime);
         sessionStore.put(sessionCookie.getValue(), sessionData);
 
-        sessionCookie.setMaxAge(100);
+        sessionCookie.setMaxAge(3600);
         response.addCookie(sessionCookie); // 갱신된 쿠키를 클라이언트에 다시 전송
 
         return sessionData;

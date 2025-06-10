@@ -71,7 +71,7 @@ public class HomeController {
 
     @RequestMapping("/main")
     public String main(HttpServletRequest request, HttpServletResponse response) {
-        return handleSession(request, response, "main", "main");
+        return handleSession(request, response, "login", "main");
     }
 
     @RequestMapping("/logout")
@@ -82,7 +82,21 @@ public class HomeController {
 
     @RequestMapping("/newpost")
     public String newpost(HttpServletRequest request, HttpServletResponse response) {
-        return handleSession(request, response, "newpost", "newpost");
+        return handleSession(request, response, "login", "newpost");
+    }
+
+    @RequestMapping("/mypage")
+    public String mypage(HttpServletRequest request, HttpServletResponse response, Model model) {
+        Object user = sessionManager.getSession(request, response);
+        if (user == null) {
+            return "login";
+        }
+        SessionManager.SessionData sessionData = (SessionManager.SessionData) user;
+        User loginUser = (User) sessionData.getValue();
+
+        model.addAttribute("userid", loginUser.getUserid());
+
+        return handleSession(request, response, "login", "mypage");
     }
 
 }
