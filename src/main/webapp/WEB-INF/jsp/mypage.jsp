@@ -13,6 +13,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet"> <!--위3줄폰트-->
 	<style>
+	    #line2::after {
+            content: '';
+            position: absolute;
+            margin-left: 0.6%;
+            margin-top: 0.1%;
+            width: 1px;
+            height: 25px;
+            background-color: gray;
+        }
 	</style>
     <script>
         $.ajaxSetup({
@@ -57,7 +66,7 @@
 	<div class="post-container1">
         <div class="post-container2">
         <h4 style="text-align: center;">내 정보
-			<a href="#" style="margin: 2%;" id="line">팔로워</a>
+			<a href="#" style="margin: 2%;" id="line2">팔로워</a>
             <a href="#" id="logoutBtn" style="margin: 2%;">팔로우</a>
         </h4>
         <div class="input-field"><strong>아이디:</strong></div>

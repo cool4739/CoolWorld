@@ -3,6 +3,7 @@ package com.example.demo.etc;
 import lombok.Getter;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,18 +42,19 @@ public class SessionManager {
 
     //## 세션 생성 ##//
     public void createSession(Object value, HttpServletResponse response) {
-        //세션 id(UUID)를 생성하고, 값을 세션에 저장
         String sessionId = UUID.randomUUID().toString();
         long expirationTime = System.currentTimeMillis() + SESSION_TIMEOUT;
         sessionStore.put(sessionId, new SessionData(value, expirationTime));
 
-        //쿠키 생성
-        Cookie mySessionCookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
-        mySessionCookie.setHttpOnly(true); //js에서 못고치게
-        mySessionCookie.setMaxAge(3600); //쿠키유지시간
-        mySessionCookie.setPath("/"); //쿠키유효범위 /하위 모두 허용
-        System.out.println(sessionId);
-        response.addCookie(mySessionCookie);
+        // Set-Cookie using Spring's ResponseCookie only
+        ResponseCookie cookie = ResponseCookie.from(SESSION_COOKIE_NAME, sessionId)
+                .path("/")
+                .httpOnly(true)
+                .sameSite("Lax")
+                .maxAge(3600)
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString()); // 덮어쓰기 방식 (중복 방지)
     }
 
     //## 쿠키 조회 ##//
@@ -62,7 +64,7 @@ public class SessionManager {
         for (String key : keySet) {
             System.out.println(key + " : " + sessionStore.get(key));
         }  //sessionStore 체크용
-        if (sessionCookie == null) { //쿠키찾기
+            if (sessionCookie == null) { //쿠키찾기
             System.out.println("sessionCookie null");
             return null;
         }
@@ -84,12 +86,21 @@ public class SessionManager {
 
     //## 쿠키 만료 ##//
     public void expire(HttpServletRequest request, HttpServletResponse response) {
+        // 1. 서버 세션 데이터 삭제
         Cookie sessionCookie = findCookie(request, SESSION_COOKIE_NAME);
         if (sessionCookie != null) {
-            sessionStore.remove(sessionCookie.getValue()); //세션데이터삭제
-            sessionCookie.setMaxAge(0); //쿠키 만료시키기
-            sessionCookie.setPath("/");
-            response.addCookie(sessionCookie); //만료된 쿠키를 클라이언트에 보냄으로 삭제
+            sessionStore.remove(sessionCookie.getValue());
+        }
+
+        String[] pathsToDelete = {"/", "/post", "/post/create"}; // 실제 사용하는 경로들 나열
+
+        for (String path : pathsToDelete) {
+            Cookie deleteCookie = new Cookie(SESSION_COOKIE_NAME, "");
+            deleteCookie.setPath(path);
+            deleteCookie.setMaxAge(0); // 즉시 만료
+            deleteCookie.setHttpOnly(true);
+            if (request.isSecure()) deleteCookie.setSecure(true);
+            response.addCookie(deleteCookie);
         }
     }
 

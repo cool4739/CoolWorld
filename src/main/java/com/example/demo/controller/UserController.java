@@ -22,24 +22,13 @@ import java.util.Objects;
 public class UserController {
 
     private final UserService userService;
-    private final SessionManager sessionManager;
 
-    private User getLoginUser(HttpServletRequest request, HttpServletResponse response) {
-        Object user = sessionManager.getSession(request, response);
-        if (user == null) {
-            return null;
-        } else {
-            SessionManager.SessionData sessionData = (SessionManager.SessionData) user;
-            return (User) sessionData.getValue();
-        }
-    }
-
-    @PostMapping("/user/create") // 생성 //왜인지 모르겠다 LONG타입으로 반환해줘야지만 ajax에서 에러가 나지 않는다
+    @PostMapping("/user/create") // 생성
     public Long create(@RequestBody UserRegisterRequestDto userRegisterRequestDto) {
         return userService.register(userRegisterRequestDto); // 0 -> id, 1 -> email, 2 -> ok
     }
 
-    @GetMapping("/user/mypage/{userid}")
+    @GetMapping("/user/mypage/{userid}") // 추후 본인과 맞는 요청인지 비교하는거 넣기
     public User getUserById(@PathVariable String userid) {
         if (userid == null) {
             System.out.println("null");

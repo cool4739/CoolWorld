@@ -41,6 +41,7 @@
                 $.ajax({
                     type: "POST",
                     url: "/post/create",
+                    xhrFields: { withCredentials: true },
                     data:JSON.stringify(data)
                 }).done(function(){ // done - success 와 동일
 

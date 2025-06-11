@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dao.User;
 import com.example.demo.etc.SessionManager;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
@@ -74,12 +75,6 @@ public class HomeController {
         return handleSession(request, response, "login", "main");
     }
 
-    @RequestMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        sessionManager.expire(request, response);
-        return "login";
-    }
-
     @RequestMapping("/newpost")
     public String newpost(HttpServletRequest request, HttpServletResponse response) {
         return handleSession(request, response, "login", "newpost");
@@ -87,6 +82,8 @@ public class HomeController {
 
     @RequestMapping("/mypage")
     public String mypage(HttpServletRequest request, HttpServletResponse response, Model model) {
+        Cookie test = sessionManager.findCookie(request, "mySessionId");
+        System.out.println("abcdabcd!!!!!!!!: " + test.getValue());
         Object user = sessionManager.getSession(request, response);
         if (user == null) {
             return "login";

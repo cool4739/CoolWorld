@@ -2,7 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.PostReadRequestDto;
 import com.example.demo.dto.PostRegisterRequestDto;
+import com.example.demo.etc.SessionManager;
 import com.example.demo.service.PostService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,9 +18,12 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final SessionManager sessionManager;
 
-    @PostMapping("/post/create") // 생성 //왜인지 모르겠다 LONG타입으로 반환해줘야지만 ajax에서 에러가 나지 않는다
+    @PostMapping("/post/create") // 생성
     public Long create(@RequestBody PostRegisterRequestDto postRegisterRequestDto, HttpServletRequest request, HttpServletResponse response) {
+        Cookie test = sessionManager.findCookie(request, "mySessionId");
+        System.out.println("abcdabcd: " + test.getValue());
         return postService.register(postRegisterRequestDto, request, response);
     }
 
