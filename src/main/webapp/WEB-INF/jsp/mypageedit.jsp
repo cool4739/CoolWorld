@@ -33,6 +33,20 @@
                 //alert("jqXHR status code:"+jqXHR.status+" message:"+jqXHR.responseText);
             }
 		});//ajaxSetup
+		function checkValue() {
+			if(!document.postInfo.nickname.value) {
+				alert("닉네임을 입력하세요.");
+				return false;
+			}
+			if(!document.postInfo.currentPassword.value) {
+				alert("현재 비밀번호를 입력하세요.");
+				return false;
+			}
+			if(!document.postInfo.newPassword.value) {
+				alert("새 비밀번호를 입력하세요.");
+				return false;
+			}
+		}
 		const userid = "${userid}";
         $(document).ready(function(){
             $.ajax({
@@ -42,7 +56,6 @@
                 let fields = $(".input-field");
                 $(fields[0]).append(data.userid);
                 $(fields[1]).append(data.username);
-                $(fields[2]).append(data.nickname);
                 $(fields[3]).append(data.email);
             }).fail(function (error) {
                 //alert(JSON.stringify(error));
@@ -61,6 +74,52 @@
                 }).fail(function () {
                     alert("로그아웃 실패");
                 });
+            });
+
+            $("#updateBtn").click(function () {
+                if (checkValue() == false) {
+                    return false;
+                } else {
+                    const nickname = $("#nickname").val();
+                    const currentPassword = $("#currentPassword").val();
+                    const newPassword = $("#newPassword").val();
+                    const confirmPassword = $("#confirmPassword").val();
+
+                    if (newPassword && newPassword !== confirmPassword) {
+                        alert("새 비밀번호가 일치하지 않습니다.");
+                        return;
+                    }
+
+                    const data = {
+                        userid: userid,
+                        nickname: nickname,
+                        currentPassword: currentPassword,
+                        newPassword: newPassword
+                    };
+
+                    $.ajax({
+                        type: "PUT",
+                        url: "/user/update",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=UTF-8",
+                    }).done(function (result) {
+        				if(result == 0) {
+        				    alert("현재 비밀번호가 일치하지 않습니다.");
+        				} else if(result == 1) {
+        				    alert("다른 닉네임을 입력해주세요.");
+        				} else if(result == 2) {
+        				    alert("새 비밀번호를 다시 입력해주세요.");
+        				    location.href='/';
+        				} else if(result == 3){
+        				    alert("정보가 변경되었습니다.");
+        				    location.href = "/mypage";
+        				} else {
+        				    alert("반환값오류");
+        				}
+                    }).fail(function (err) {
+                        alert(JSON.stringify(error));
+                    });
+                }
             });
         });
     </script>
@@ -85,10 +144,25 @@
         </h4>
         <div class="input-field"><strong>아이디:</strong></div>
         <div class="input-field"><strong>성함:</strong></div>
-        <div class="input-field"><strong>닉네임:</strong></div>
+        <div class="input-field">
+            <strong>닉네임:</strong>
+            <input type="text" id="nickname" class="form-control" style="width: 300px;" />
+        </div>
         <div class="input-field"><strong>이메일:</strong></div>
-        <button type="button" class="btn btn-primary" onclick="location.href='/mypageedit'">내 정보 변경</button>
-        <button type="button" class="btn btn-primary" onclick="location.href='/mypostlist'">내가 작성한 글</button>
+        <h5>비밀번호 변경</h5>
+        <div class="input-field">
+            <strong>현재 비밀번호:</strong>
+            <input type="password" id="currentPassword" class="form-control" style="width: 300px;" />
+        </div>
+        <div class="input-field">
+            <strong>새 비밀번호:</strong>
+            <input type="password" id="newPassword" class="form-control" style="width: 300px;" />
+        </div>
+        <div class="input-field">
+            <strong>비밀번호 확인:</strong>
+            <input type="password" id="confirmPassword" class="form-control" style="width: 300px;" />
+        </div>
+        <button type="button" class="btn btn-primary" id="updateBtn">변경완료</button>
         </div>
     </div>
     </form>

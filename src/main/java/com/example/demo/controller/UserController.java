@@ -2,10 +2,13 @@ package com.example.demo.controller;
 
 //import com.dto.UserUpdateDto;
 import com.example.demo.dao.User;
+import com.example.demo.dto.PostRegisterRequestDto;
 import com.example.demo.dto.UserLoginRequestDto;
 import com.example.demo.dto.UserRegisterRequestDto;
+import com.example.demo.dto.UserUpdateRequestDto;
 import com.example.demo.etc.SessionManager;
 import com.example.demo.service.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/user/mypage/{userid}") // 추후 본인과 맞는 요청인지 비교하는거 넣기
-    public User getUserById(@PathVariable String userid) {
+    public User getUserById(@PathVariable String userid) { //@PathVariable은 url 변수값 그대로 가져오기
         if (userid == null) {
             System.out.println("null");
             return null;
@@ -43,14 +46,12 @@ public class UserController {
         return userService.read(user_num, userReadRequestDto);
     }*/
 
-/*    @PutMapping("/user/update") //수정
-    public Long update(HttpSession httpSession, @RequestBody UserUpdateDto updateDto) {
-        System.out.println("update api");
-        User user = (User)httpSession.getAttribute("user");
-        return userService.update(user.getNum(), updateDto);
+    @PutMapping("/user/update") //수정
+    public Long update(@RequestBody UserUpdateRequestDto updateRequestDto, HttpServletRequest request, HttpServletResponse response) {
+        return userService.update(updateRequestDto, request, response);
     }
 
-    @DeleteMapping("/user/{num}/delete") //삭제
+    /*@DeleteMapping("/user/{num}/delete") //삭제
     public Long delete(@PathVariable Long num) {
         userService.delete(num);
         return num;

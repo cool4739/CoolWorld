@@ -13,6 +13,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet"> <!--위3줄폰트-->
 	<style>
+	    #line2::after {
+            content: '';
+            position: absolute;
+            margin-left: 0.6%;
+            margin-top: 0.1%;
+            width: 1px;
+            height: 25px;
+            background-color: gray;
+        }
 	</style>
     <script>
         $.ajaxSetup({
@@ -24,30 +33,39 @@
                 //alert("jqXHR status code:"+jqXHR.status+" message:"+jqXHR.responseText);
             }
 		});//ajaxSetup
+		const userid = "${userid}";
         $(document).ready(function(){
-            $("#postInfo").submit(function(event) {
-                event.preventDefault(); //불필요한 페이지새로고침 방지
-                const data = {
-                    content: $('#content').val()
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "/post/create",
-                    data:JSON.stringify(data)
-                }).done(function(result){ // done - success 와 동일
-        	        if (result === 0) {
-                        alert('다시 로그인해주세요.');
-                    } else if (typeof result === 'number' && result > 0) {
-                        alert('성공적으로 작성되었습니다.');
-                        location.href='/';
-                    } else {
-                        alert('알 수 없는 오류가 발생했습니다.');
-                    }
-                }).fail(function (error) {
-                    //alert(JSON.stringify(error));
-                    alert('잘못된 접근입니다');
-                });
+            function addPost(content, views, comments, likes) {
+                let newPost = `
+                    <div class="post-container2">
+                        <div class="post-content">${'${'}content}</div>
+                        <div class="post-info">
+                            <span>조회수: ${'${'}views}</span>
+                            <span>댓글: ${'${'}comments}</span>
+                            <span>🖤 공감: ${'${'}likes}</span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+                $(".post-container1").append(newPost);
+            }
+
+            $.ajax({
+                type: "GET",
+                url: "/post/mypostlistread/" + userid,
+            }).done(function(data){ // done - success 와 동일
+                if (data.length === 0) {
+                    $(".post-container1").append('<h4 style="text-align: center;">작성된 글이 없습니다</h4>');
+                } else {
+                    data.forEach(function(post) {
+                        addPost(post.content, post.views, post.comments, post.likes);
+                    });
+                }
+            }).fail(function (error) {
+                //alert(JSON.stringify(error));
+                alert('게시물 로드 오류');
             });
+
             $("#logoutBtn").click(function (e) {
                 e.preventDefault();
                 $.ajax({
@@ -76,14 +94,7 @@
 			<a href="#" id="logoutBtn" style="margin: 2%;">로그아웃</a>
 		</div>
 	</div>
-	<form name="postInfo" id="postInfo">
 	<div class="post-container1">
-        <div class="post-container2">
-        <h4 style="text-align: center;">게시물 작성</h4>
-            <textarea id="content" name="content" class="input-field" placeholder="내용을 입력하세요" rows="5" required></textarea>
-            <button type="submit" class="btn btn-primary">작성 완료</button>
-        </div>
     </div>
-    </form>
 </body>
 </html>

@@ -1,8 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dao.Post;
-import com.example.demo.dao.PostRepository;
-import com.example.demo.dao.User;
+import com.example.demo.dao.*;
 import com.example.demo.dto.PostReadRequestDto;
 import com.example.demo.dto.PostRegisterRequestDto;
 import com.example.demo.etc.SessionManager;
@@ -43,27 +41,29 @@ public class PostService {
         return savedPost.getPostid(); // 실제 저장된 ID 반환
     }
 
-    @Transactional(readOnly = true) // 기능을 조회로 제한, 조회 속도 개선
+    /*@Transactional(readOnly = true) // 기능을 조회로 제한, 조회 속도 개선
     public PostReadRequestDto read(Long postid) { // 읽기
         Post post = postRepository.findByPostId(postid)
                 .orElseThrow(() -> new IllegalArgumentException("없음"));
         return new PostReadRequestDto(post);
-    }
+    }*/
 
     @Transactional(readOnly = true)
     public List<PostReadRequestDto> readList() {
-        List<PostReadRequestDto> postList = postRepository.findAll().stream()
+        List<PostReadRequestDto> postList = postRepository.findAll().stream() //post테이블에서 모든데이터 가져오기
+                .map(PostReadRequestDto::new) // 각각post를 dto에 맞춰서 바꾸고
+                .collect(Collectors.toList()); //그걸 다시 list로
+
+        return postList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostReadRequestDto> myPostListReadList(String userid) {
+        List<Post> posts = postRepository.findAllByUserId(userid);
+
+        List<PostReadRequestDto> postList = posts.stream()
                 .map(PostReadRequestDto::new)
                 .collect(Collectors.toList());
-
-        // 로그 출력
-        postList.forEach(post -> {
-            System.out.println("Content: " + post.getContent());
-            System.out.println("Views: " + post.getViews());
-            System.out.println("Comments: " + post.getComments());
-            System.out.println("Likes: " + post.getLikes());
-            System.out.println("-----------------------------");
-        });
 
         return postList;
     }

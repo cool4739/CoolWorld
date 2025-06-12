@@ -34,8 +34,14 @@ public class PostController {
     }*/
 
     @GetMapping("/post/read")
-    public ResponseEntity<List<PostReadRequestDto>> getList() {
+    public ResponseEntity<List<PostReadRequestDto>> read() {
         List<PostReadRequestDto> posts = postService.readList();
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/post/mypostlistread/{userid}")
+    public ResponseEntity<List<PostReadRequestDto>> myPostListRead(@PathVariable String userid) {
+        List<PostReadRequestDto> posts = postService.myPostListReadList(userid);
         return ResponseEntity.ok(posts);
     }
 

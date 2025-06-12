@@ -32,9 +32,7 @@
                         <div class="post-info">
                             <span>조회수: ${'${'}views}</span>
                             <span>댓글: ${'${'}comments}</span>
-                            <span class="like-button" style="color: gray; cursor: pointer;">🖤 공감:
-                                <span class="like-count">${'${'}likes}</span>
-                            </span>
+                            <span>🖤 공감: ${'${'}likes}</span>
                         </div>
                     </div>
                 `;
@@ -72,9 +70,9 @@
 </head>
 <body>
     <div class="post-container0" style="margin-top: 8%; background-color:white; padding: 0px; display: flex;">
-	    <a href="main" style="text-align: left; font-family: Merienda; font-weight: bold; width: 50%; color:black;">
-            <h2 style="font-weight: bold;">CoolWorld</h2>
-        </a>
+	    <h2 style="font-weight: bold; text-align: left; font-family: Merienda; font-weight: bold; width: 50%;">
+          <a href="main" style="color: black; text-decoration: none; display: inline-block;">CoolWorld</a>
+        </h2>
 		<div class="s1" style="text-align: right; width: 50%;">
 			<a href="mypage" style="margin: 2%;" id="line">마이페이지</a>
 			<a href="newpost" style="margin: 2%;" id="line">게시물작성</a>

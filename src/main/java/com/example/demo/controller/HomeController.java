@@ -33,6 +33,18 @@ public class HomeController {
         }
     }
 
+    private User getLoginUser(HttpServletRequest request, HttpServletResponse response, Model model) {
+        Object user = sessionManager.getSession(request, response);
+        if (user == null) {
+            return null;
+        }
+
+        SessionManager.SessionData sessionData = (SessionManager.SessionData) user;
+        User loginUser = (User) sessionData.getValue();
+        model.addAttribute("userid", loginUser.getUserid());
+        return loginUser;
+    }
+
     @RequestMapping("/test")
     public String test() {
         System.out.println("test");
@@ -82,18 +94,23 @@ public class HomeController {
 
     @RequestMapping("/mypage")
     public String mypage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        Cookie test = sessionManager.findCookie(request, "mySessionId");
-        System.out.println("abcdabcd!!!!!!!!: " + test.getValue());
-        Object user = sessionManager.getSession(request, response);
-        if (user == null) {
-            return "login";
-        }
-        SessionManager.SessionData sessionData = (SessionManager.SessionData) user;
-        User loginUser = (User) sessionData.getValue();
-
-        model.addAttribute("userid", loginUser.getUserid());
-
+        User loginUser = getLoginUser(request, response, model);
+        if (loginUser == null) return "login";
         return handleSession(request, response, "login", "mypage");
+    }
+
+    @RequestMapping("/mypostlist")
+    public String mypostlist(HttpServletRequest request, HttpServletResponse response, Model model) {
+        User loginUser = getLoginUser(request, response, model);
+        if (loginUser == null) return "login";
+        return handleSession(request, response, "login", "mypostlist");
+    }
+
+    @RequestMapping("/mypageedit")
+    public String mypageedit(HttpServletRequest request, HttpServletResponse response, Model model) {
+        User loginUser = getLoginUser(request, response, model);
+        if (loginUser == null) return "login";
+        return handleSession(request, response, "login", "mypageedit");
     }
 
 }

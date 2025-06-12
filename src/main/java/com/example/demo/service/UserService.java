@@ -7,6 +7,7 @@ import com.example.demo.dto.UserLoginRequestDto;
 import com.example.demo.dao.User;
 import com.example.demo.dao.UserRepository;
 import com.example.demo.dto.UserRegisterRequestDto;
+import com.example.demo.dto.UserUpdateRequestDto;
 import com.example.demo.etc.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -45,13 +46,33 @@ public class UserService {
         return userRepository.save(user).getNum();
     }*/
 
-/*    @Transactional
-    public Long update(Long num, UserUpdateDto updateDto) { //수정
-        User user = userRepository.findById(num)
-                .orElseThrow(() -> new IllegalCallerException("없음"));
-        user.update(updateDto);
-        return num;
-    }*/
+    @Transactional
+    public Long update(UserUpdateRequestDto updateRequestDto, HttpServletRequest request, HttpServletResponse response) { //수정\
+        UserKey userKey = new UserKey();
+        userKey.setUserid(updateRequestDto.getUserid());
+        User user = userRepository.findByUserId(userKey)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+        // 현재 비밀번호 확인
+        if (!updateRequestDto.getCurrentPassword().equals(user.getUserpw())) {
+            return 0L;
+        }
+        // 닉네임 변경
+        if (updateRequestDto.getNickname() != null && !updateRequestDto.getNickname().trim().isEmpty()) {
+            user.setNickname(updateRequestDto.getNickname());
+        } else {
+            return 1L;
+        }
+        // 새 비밀번호 변경
+        if (updateRequestDto.getNewPassword() != null && !updateRequestDto.getNewPassword().trim().isEmpty()) {
+            user.setUserpw(updateRequestDto.getNewPassword());
+        } else {
+            return 2L;
+        }
+        // 저장 (JPA의 변경 감지로 자동 저장)
+        userRepository.save(user);
+
+        return 3L; // Long 타입 반환
+    }
 
     /*@Transactional
     public Long read(Long user_num, UserReadRequestDto userReadRequestDto) { //읽기
