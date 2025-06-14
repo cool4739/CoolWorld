@@ -92,7 +92,7 @@ public class SessionManager {
             sessionStore.remove(sessionCookie.getValue());
         }
 
-        String[] pathsToDelete = {"/", "/post", "/post/create"}; // 실제 사용하는 경로들 나열
+        String[] pathsToDelete = {"/", "/post", "/post/create", "/postinfo"}; // 실제 사용하는 expire 안되는 이슈가 있는 경로 기재
 
         for (String path : pathsToDelete) {
             Cookie deleteCookie = new Cookie(SESSION_COOKIE_NAME, "");

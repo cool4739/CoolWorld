@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.PostInfoRequestDto;
 import com.example.demo.dto.PostReadRequestDto;
 import com.example.demo.dto.PostRegisterRequestDto;
 import com.example.demo.etc.SessionManager;
@@ -34,14 +35,23 @@ public class PostController {
     }*/
 
     @GetMapping("/post/read")
-    public ResponseEntity<List<PostReadRequestDto>> read() {
-        List<PostReadRequestDto> posts = postService.readList();
+    public ResponseEntity<List<PostReadRequestDto>> read(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        List<PostReadRequestDto> posts = postService.readList(page, size);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/post/mypostlistread/{userid}")
     public ResponseEntity<List<PostReadRequestDto>> myPostListRead(@PathVariable String userid) {
         List<PostReadRequestDto> posts = postService.myPostListReadList(userid);
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/post/info/{postid}-{userid}")
+    public ResponseEntity<List<PostInfoRequestDto>> info(@PathVariable Long postid, @PathVariable String userid) {
+        List<PostInfoRequestDto> posts = postService.postInfo(postid, userid);
         return ResponseEntity.ok(posts);
     }
 

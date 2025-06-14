@@ -2,13 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.dao.User;
 import com.example.demo.etc.SessionManager;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 public class HomeController {
@@ -33,7 +32,8 @@ public class HomeController {
         }
     }
 
-    private User getLoginUser(HttpServletRequest request, HttpServletResponse response, Model model) {
+    //세션에서 userid 가져오기
+    private User getUserId(HttpServletRequest request, HttpServletResponse response, Model model) {
         Object user = sessionManager.getSession(request, response);
         if (user == null) {
             return null;
@@ -94,23 +94,31 @@ public class HomeController {
 
     @RequestMapping("/mypage")
     public String mypage(HttpServletRequest request, HttpServletResponse response, Model model) {
-        User loginUser = getLoginUser(request, response, model);
+        User loginUser = getUserId(request, response, model);
         if (loginUser == null) return "login";
         return handleSession(request, response, "login", "mypage");
     }
 
     @RequestMapping("/mypostlist")
     public String mypostlist(HttpServletRequest request, HttpServletResponse response, Model model) {
-        User loginUser = getLoginUser(request, response, model);
+        User loginUser = getUserId(request, response, model);
         if (loginUser == null) return "login";
         return handleSession(request, response, "login", "mypostlist");
     }
 
     @RequestMapping("/mypageedit")
     public String mypageedit(HttpServletRequest request, HttpServletResponse response, Model model) {
-        User loginUser = getLoginUser(request, response, model);
+        User loginUser = getUserId(request, response, model);
         if (loginUser == null) return "login";
         return handleSession(request, response, "login", "mypageedit");
+    }
+
+    @RequestMapping("/postinfo/{postid}")
+    public String postinfo(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable Long postid) {
+        User loginUser = getUserId(request, response, model);
+        if (loginUser == null) return "login";
+        model.addAttribute("postid", postid);
+        return handleSession(request, response, "login", "postinfo");
     }
 
 }

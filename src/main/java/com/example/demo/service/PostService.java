@@ -1,16 +1,22 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.*;
+import com.example.demo.dto.PostInfoRequestDto;
 import com.example.demo.dto.PostReadRequestDto;
 import com.example.demo.dto.PostRegisterRequestDto;
 import com.example.demo.etc.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -49,11 +55,11 @@ public class PostService {
     }*/
 
     @Transactional(readOnly = true)
-    public List<PostReadRequestDto> readList() {
-        List<PostReadRequestDto> postList = postRepository.findAll().stream() //post테이블에서 모든데이터 가져오기
-                .map(PostReadRequestDto::new) // 각각post를 dto에 맞춰서 바꾸고
-                .collect(Collectors.toList()); //그걸 다시 list로
-
+    public List<PostReadRequestDto> readList(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("postid").descending());
+        List<PostReadRequestDto> postList = postRepository.findAll(pageable).stream()
+                .map(PostReadRequestDto::new)
+                .collect(Collectors.toList());
         return postList;
     }
 
@@ -66,5 +72,23 @@ public class PostService {
                 .collect(Collectors.toList());
 
         return postList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostInfoRequestDto> postInfo(Long postid, String userid) {
+        PostKey postkey = new PostKey();
+        postkey.setPostid(postid);
+        postkey.setUserid(userid);
+
+        Optional<Post> postOptional = postRepository.findById(postkey);
+        if (postOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Post post = postOptional.get();
+
+        // 엔티티를 DTO로 변환
+        PostInfoRequestDto dto = new PostInfoRequestDto(post);
+
+        return List.of(dto);
     }
 }

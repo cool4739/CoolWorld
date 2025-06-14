@@ -8,7 +8,7 @@
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<link type="text/css" href="/resources/css/CoolWorld.css?1" rel="stylesheet"><!-- css적용안될때 .css뒤에 ?뒤에 문자열을 아무거나 집어넣자 -->
+	<link type="text/css" href="/resources/css/CoolWorld.css?2" rel="stylesheet"><!-- css적용안될때 .css뒤에 ?뒤에 문자열을 아무거나 집어넣자 -->
 	<link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap" rel="stylesheet"> <!--위3줄폰트-->
@@ -25,9 +25,13 @@
             }
 		});//ajaxSetup
         $(document).ready(function(){
-            function addPost(content, views, comments, likes) {
+            let currentPage = 0;
+            const pageSize = 10;
+            let loading = false; // 중복 호출 방지용
+
+            function addPost(postid, content, views, comments, likes) {
                 let newPost = `
-                    <div class="post-container2">
+                    <div class="post-container2" style="cursor:pointer;" onclick="location.href='/postinfo/${'${'}postid}'">
                         <div class="post-content">${'${'}content}</div>
                         <div class="post-info">
                             <span>조회수: ${'${'}views}</span>
@@ -36,19 +40,44 @@
                         </div>
                     </div>
                 `;
-                $(".post-container1").append(newPost);
+                $(".post-container1").append(newPost); // 맨 앞에 추가됨 → 최신 글이 위로
             }
 
-            $.ajax({
-                type: "GET",
-                url: "/post/read",
-            }).done(function(data){ // done - success 와 동일
-                data.forEach(function(post) {
-                    addPost(post.content, post.views, post.comments, post.likes);
+            function loadPosts(page) {
+                if (loading) return;
+                loading = true;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/post/read",
+                    data: {
+                        page: page,
+                        size: pageSize
+                    }
+                }).done(function (data) {
+                    if (data.length === 0) {
+                        // 더 이상 불러올 게시물이 없으면 스크롤 이벤트 제거
+                        $(window).off("scroll");
+                    } else {
+                        data.forEach(function (post) {
+                            addPost(post.postid, post.content, post.views, post.comments, post.likes);
+                        });
+                        currentPage++;
+                    }
+                }).fail(function () {
+                    alert('게시물 로드 오류');
+                }).always(function () {
+                    loading = false;
                 });
-            }).fail(function (error) {
-                //alert(JSON.stringify(error));
-                alert('게시물 로드 오류');
+            }
+
+            loadPosts(currentPage); // 최초 5개 로드
+
+            $(window).scroll(function () {
+                // 문서 높이 - 윈도우 높이 - 스크롤탑이 100 이하가 되면 (즉, 바닥에 가까우면)
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                    loadPosts(currentPage);
+                }
             });
 
             $("#logoutBtn").click(function (e) {
