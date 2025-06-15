@@ -35,35 +35,59 @@
 		});//ajaxSetup
 		const userid = "${userid}";
         $(document).ready(function(){
-            function addPost(content, views, comments, likes) {
+            let currentPage = 0;
+            const pageSize = 10;
+            let loading = false; // 중복 호출 방지용
+
+            function addPost(postid, content, views, comments, likes) {
                 let newPost = `
-                    <div class="post-container2">
+                    <div class="post-container2" style="cursor:pointer;" onclick="location.href='/postinfo/${'${'}postid}'">
                         <div class="post-content">${'${'}content}</div>
                         <div class="post-info">
                             <span>조회수: ${'${'}views}</span>
                             <span>댓글: ${'${'}comments}</span>
                             <span>🖤 공감: ${'${'}likes}</span>
-                            </span>
                         </div>
                     </div>
                 `;
-                $(".post-container1").append(newPost);
+                $(".post-container1").append(newPost); // 맨 앞에 추가됨 → 최신 글이 위로
             }
 
-            $.ajax({
-                type: "GET",
-                url: "/post/mypostlistread/" + userid,
-            }).done(function(data){ // done - success 와 동일
-                if (data.length === 0) {
-                    $(".post-container1").append('<h4 style="text-align: center;">작성된 글이 없습니다</h4>');
-                } else {
-                    data.forEach(function(post) {
-                        addPost(post.content, post.views, post.comments, post.likes);
-                    });
+            function loadPosts(page) {
+                if (loading) return;
+                loading = true;
+
+                $.ajax({
+                    type: "GET",
+                    url: "/post/mypostlistread/" + userid,
+                    data: {
+                        page: page,
+                        size: pageSize
+                    }
+                }).done(function (data) {
+                    if (data.length === 0) {
+                        // 더 이상 불러올 게시물이 없으면 스크롤 이벤트 제거
+                        $(window).off("scroll");
+                    } else {
+                        data.forEach(function (post) {
+                            addPost(post.postid, post.content, post.views, post.comments, post.likes);
+                        });
+                        currentPage++;
+                    }
+                }).fail(function () {
+                    alert('게시물 로드 오류');
+                }).always(function () {
+                    loading = false;
+                });
+            }
+
+            loadPosts(currentPage); // 최초 5개 로드
+
+            $(window).scroll(function () {
+                // 문서 높이 - 윈도우 높이 - 스크롤탑이 100 이하가 되면 (즉, 바닥에 가까우면)
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                    loadPosts(currentPage);
                 }
-            }).fail(function (error) {
-                //alert(JSON.stringify(error));
-                alert('게시물 로드 오류');
             });
 
             $("#logoutBtn").click(function (e) {

@@ -38,10 +38,17 @@
                 return `${'${'}year}.${'${'}month}.${'${'}day} ${'${'}hour}:${'${'}minute}`;
             }
 
-            function addPost(postid, userid, nickname, content, views, comments, likes, uptime, imagepath) {
+            function addPost(postid, userid, nickname, content, views, comments, likes, uptime, imagepath, owner) {
                 let newPost = `
                     <div class="post-container2">
-                        <div class="post-author" style="font-weight:bold; margin-bottom:4px;">${'${'}nickname}@${'${'}userid}</div>
+
+                        <div style="display: flex;">
+                            <div class="post-author" style="font-weight:bold; margin-bottom:4px; width:50%;">${'${'}nickname}@${'${'}userid}</div>
+                            <div style="text-align: right; width:50%;">
+                                ${'${'}owner ? '<a href="" style="margin: 3%;" id="line">수정</a><a href="" id="" style="margin-left: 7%;">삭제</a>' : ''}
+                            </div>
+                        </div>
+
                         <div class="dumi" style="margin-bottom:8px; display: -webkit-box; font-size: 20px; color: #555; margin-bottom: 15px; white-space: pre-wrap; word-break: break-all;">${'${'}content}</div>
                         <div class="post-stats" style="font-size: 0.9em; color: gray;">
                             조회수: ${'${'}views} | 댓글: ${'${'}comments} | 🖤 공감: ${'${'}likes} | ${'${'}uptime}
@@ -58,9 +65,10 @@
                 type: "GET",
                 url: "/post/info/" + postid + "-" + userid,
             }).done(function (data) {
+                console.log(data);
                 data.forEach(function (post) {
                 const formattedTime = timeSet(post.uptime);
-                addPost(post.postid, post.userid, post.nickname, post.content, post.views, post.comments, post.likes, formattedTime, post.imagepath);
+                addPost(post.postid, post.userid, post.nickname, post.content, post.views, post.comments, post.likes, formattedTime, post.imagepath, post.owner);
                 });
             }).fail(function () {
                 alert('게시물 로드 오류');

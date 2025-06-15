@@ -8,6 +8,7 @@ import com.example.demo.etc.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -64,8 +65,9 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostReadRequestDto> myPostListReadList(String userid) {
-        List<Post> posts = postRepository.findAllByUserId(userid);
+    public List<PostReadRequestDto> myPostListReadList(String userid, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("postid").descending());
+        Page<Post> posts = postRepository.findPostListByUserId(userid, pageable);
 
         List<PostReadRequestDto> postList = posts.stream()
                 .map(PostReadRequestDto::new)
@@ -78,16 +80,16 @@ public class PostService {
     public List<PostInfoRequestDto> postInfo(Long postid, String userid) {
         PostKey postkey = new PostKey();
         postkey.setPostid(postid);
-        postkey.setUserid(userid);
 
-        Optional<Post> postOptional = postRepository.findById(postkey);
+        Optional<Post> postOptional = postRepository.findByPostId(postkey);
         if (postOptional.isEmpty()) {
             return Collections.emptyList();
         }
         Post post = postOptional.get();
 
-        // 엔티티를 DTO로 변환
-        PostInfoRequestDto dto = new PostInfoRequestDto(post);
+        // 현재 사용자(userid)와 게시글 작성자(post.getUserid()) 비교
+        boolean owner = userid.equals(post.getUserid());
+        PostInfoRequestDto dto = new PostInfoRequestDto(post, owner);
 
         return List.of(dto);
     }

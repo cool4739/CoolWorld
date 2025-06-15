@@ -52,7 +52,7 @@
                         url: "/user/login",
                         data:JSON.stringify(data)
                     }).done(function(){ // done - success 와 동일
-                        location.href='main';
+                        location.href='/main';
                     }).fail(function (error) {
                         //alert(JSON.stringify(error));
                         alert('존재하지 않거나 올바르지 않은 계정입니다');

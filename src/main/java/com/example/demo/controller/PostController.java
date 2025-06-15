@@ -35,17 +35,14 @@ public class PostController {
     }*/
 
     @GetMapping("/post/read")
-    public ResponseEntity<List<PostReadRequestDto>> read(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
+    public ResponseEntity<List<PostReadRequestDto>> read(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<PostReadRequestDto> posts = postService.readList(page, size);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/post/mypostlistread/{userid}")
-    public ResponseEntity<List<PostReadRequestDto>> myPostListRead(@PathVariable String userid) {
-        List<PostReadRequestDto> posts = postService.myPostListReadList(userid);
+    public ResponseEntity<List<PostReadRequestDto>> myPostListRead(@PathVariable String userid, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        List<PostReadRequestDto> posts = postService.myPostListReadList(userid, page, size);
         return ResponseEntity.ok(posts);
     }
 

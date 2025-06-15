@@ -22,8 +22,9 @@ public class PostInfoRequestDto {
     private Long likes;
     private LocalDateTime uptime;
     private String imagepath;
+    private boolean owner;
 
-    public PostInfoRequestDto(Post entity) {
+    public PostInfoRequestDto(Post entity, boolean owner) {
         this.postid = entity.getPostid();
         this.userid = entity.getUserid();
         this.nickname = entity.getNickname();
@@ -33,5 +34,10 @@ public class PostInfoRequestDto {
         this.likes = entity.getLikes();
         this.uptime = entity.getUptime();
         this.imagepath = entity.getImagepath();
+        this.owner = owner;
+    }
+
+    public PostInfoRequestDto(Post post) {
+        this(post, false); // 기본값 false
     }
 }
