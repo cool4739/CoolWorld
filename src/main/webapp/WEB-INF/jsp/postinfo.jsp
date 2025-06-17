@@ -45,7 +45,7 @@
                         <div style="display: flex;">
                             <div class="post-author" style="font-weight:bold; margin-bottom:4px; width:50%;">${'${'}nickname}@${'${'}userid}</div>
                             <div style="text-align: right; width:50%;">
-                                ${'${'}owner ? '<a href="" style="margin: 3%;" id="line">수정</a><a href="" id="" style="margin-left: 7%;">삭제</a>' : ''}
+                                ${'${'}owner ? '<a href="/postupdate/${postid}" style="margin: 3%;" id="line">수정</a><a href="#" id="deleteBtn" style="margin-left: 7%;">삭제</a>' : ''}
                             </div>
                         </div>
 
@@ -86,6 +86,18 @@
                     location.href = "/";
                 }).fail(function () {
                     alert("로그아웃 실패");
+                });
+            });
+
+            $(document).on("click", "#deleteBtn", function () {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/post/delete/" + postid,
+                }).done(function () {
+                    alert("게시글이 삭제되었습니다.");
+                    location.href = "/";
+                }).fail(function () {
+                    alert("삭제 실패");
                 });
             });
         });

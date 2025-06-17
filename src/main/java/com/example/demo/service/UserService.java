@@ -47,7 +47,7 @@ public class UserService {
     }*/
 
     @Transactional
-    public Long update(UserUpdateRequestDto updateRequestDto, HttpServletRequest request, HttpServletResponse response) { //수정\
+    public Long update(UserUpdateRequestDto updateRequestDto) { //수정\
         UserKey userKey = new UserKey();
         userKey.setUserid(updateRequestDto.getUserid());
         User user = userRepository.findByUserId(userKey)

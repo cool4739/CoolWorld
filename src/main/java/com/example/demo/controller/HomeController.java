@@ -121,4 +121,12 @@ public class HomeController {
         return handleSession(request, response, "login", "postinfo");
     }
 
+    @RequestMapping("/postupdate/{postid}")
+    public String postupdate(HttpServletRequest request, HttpServletResponse response, Model model, @PathVariable Long postid) {
+        User loginUser = getUserId(request, response, model);
+        if (loginUser == null) return "login";
+        model.addAttribute("postid", postid);
+        return handleSession(request, response, "login", "postupdate");
+    }
+
 }

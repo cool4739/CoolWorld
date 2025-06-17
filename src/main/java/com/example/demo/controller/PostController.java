@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.PostInfoRequestDto;
-import com.example.demo.dto.PostReadRequestDto;
-import com.example.demo.dto.PostRegisterRequestDto;
+import com.example.demo.dao.Post;
+import com.example.demo.dto.*;
 import com.example.demo.etc.SessionManager;
 import com.example.demo.service.PostService;
 import jakarta.servlet.http.Cookie;
@@ -28,12 +27,6 @@ public class PostController {
         return postService.register(postRegisterRequestDto, request, response);
     }
 
-    /*@GetMapping("/post/read") // 단일조회
-    public ResponseEntity<PostReadRequestDto> get(@RequestParam Long postid) {
-        PostReadRequestDto postDto = postService.read(postid);
-        return ResponseEntity.ok(postDto);
-    }*/
-
     @GetMapping("/post/read")
     public ResponseEntity<List<PostReadRequestDto>> read(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         List<PostReadRequestDto> posts = postService.readList(page, size);
@@ -50,6 +43,18 @@ public class PostController {
     public ResponseEntity<List<PostInfoRequestDto>> info(@PathVariable Long postid, @PathVariable String userid) {
         List<PostInfoRequestDto> posts = postService.postInfo(postid, userid);
         return ResponseEntity.ok(posts);
+    }
+
+    @PutMapping("/post/update") //수정
+    public ResponseEntity<Post> update(@RequestBody PostUpdateRequestDto updateRequestDto) {
+        Post post = postService.update(updateRequestDto);
+        return ResponseEntity.ok(post);
+    }
+
+    @DeleteMapping("/post/delete/{postid}")
+    public ResponseEntity<Long> delete(@PathVariable Long postid) {
+        postService.delete(postid);
+        return ResponseEntity.ok(postid);
     }
 
 }

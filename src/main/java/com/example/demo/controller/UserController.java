@@ -47,8 +47,8 @@ public class UserController {
     }*/
 
     @PutMapping("/user/update") //수정
-    public Long update(@RequestBody UserUpdateRequestDto updateRequestDto, HttpServletRequest request, HttpServletResponse response) {
-        return userService.update(updateRequestDto, request, response);
+    public Long update(@RequestBody UserUpdateRequestDto updateRequestDto) {
+        return userService.update(updateRequestDto);
     }
 
     /*@DeleteMapping("/user/{num}/delete") //삭제

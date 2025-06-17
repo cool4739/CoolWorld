@@ -1,9 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dao.*;
-import com.example.demo.dto.PostInfoRequestDto;
-import com.example.demo.dto.PostReadRequestDto;
-import com.example.demo.dto.PostRegisterRequestDto;
+import com.example.demo.dto.*;
 import com.example.demo.etc.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,6 +40,7 @@ public class PostService {
         }
         SessionManager.SessionData sessionData = (SessionManager.SessionData) user;
         User loginUser = (User) sessionData.getValue();
+        System.out.println(sessionData.toString());
         System.out.println("User ID: " + loginUser.getUserid());
         Post post = requestDto.toEntity(PostId, loginUser.getUserid(), loginUser.getNickname());
         Post savedPost = postRepository.save(post);
@@ -92,5 +91,27 @@ public class PostService {
         PostInfoRequestDto dto = new PostInfoRequestDto(post, owner);
 
         return List.of(dto);
+    }
+
+    @Transactional
+    public Post update(PostUpdateRequestDto updateRequestDto) { //저장
+        PostKey postKey = new PostKey();
+        postKey.setPostid(updateRequestDto.getPostid());
+        System.out.println("test: " + updateRequestDto.getPostid());
+        System.out.println("content: " + updateRequestDto.getContent());
+        System.out.println("postkey: " + postKey.getPostid());
+        Post post = postRepository.findByPostId(postKey)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+
+        post.setContent(updateRequestDto.getContent());
+        return postRepository.save(post);
+    }
+
+    @Transactional
+    public void delete(Long postid) { //삭제
+        PostKey postkey = new PostKey();
+        postkey.setPostid(postid);
+        Post post = postRepository.findByPostId(postkey).orElseThrow(() -> new IllegalArgumentException("존재하지 않습니다."));
+        postRepository.delete(post);
     }
 }
