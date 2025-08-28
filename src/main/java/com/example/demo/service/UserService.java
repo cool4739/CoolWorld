@@ -47,7 +47,7 @@ public class UserService {
     }*/
 
     @Transactional
-    public Long update(UserUpdateRequestDto updateRequestDto) { //수정\
+    public Long pwUpdate(UserUpdateRequestDto updateRequestDto) { //수정
         UserKey userKey = new UserKey();
         userKey.setUserid(updateRequestDto.getUserid());
         User user = userRepository.findByUserId(userKey)
@@ -56,22 +56,34 @@ public class UserService {
         if (!updateRequestDto.getCurrentPassword().equals(user.getUserpw())) {
             return 0L;
         }
-        // 닉네임 변경
-        if (updateRequestDto.getNickname() != null && !updateRequestDto.getNickname().trim().isEmpty()) {
-            user.setNickname(updateRequestDto.getNickname());
-        } else {
-            return 1L;
-        }
         // 새 비밀번호 변경
         if (updateRequestDto.getNewPassword() != null && !updateRequestDto.getNewPassword().trim().isEmpty()) {
             user.setUserpw(updateRequestDto.getNewPassword());
         } else {
-            return 2L;
+            return 1L;
         }
-        // 저장 (JPA의 변경 감지로 자동 저장)
+        // 저장
         userRepository.save(user);
 
-        return 3L; // Long 타입 반환
+        return 2L; // Long 타입 반환
+    }
+
+    @Transactional
+    public User update(UserUpdateRequestDto updateRequestDto) { //수정
+        UserKey userKey = new UserKey();
+        userKey.setUserid(updateRequestDto.getUserid());
+        User user = userRepository.findByUserId(userKey)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 존재하지 않습니다."));
+        if (updateRequestDto.getNickname() != null && !updateRequestDto.getNickname().trim().isEmpty()) {
+            user.setNickname(updateRequestDto.getNickname());
+        } else {
+            System.out.println("닉네임저장실패");
+            return user;
+        }
+        // 저장
+        userRepository.save(user);
+
+        return user;
     }
 
     /*@Transactional

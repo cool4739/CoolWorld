@@ -33,16 +33,18 @@
                 //alert("jqXHR status code:"+jqXHR.status+" message:"+jqXHR.responseText);
             }
 		});//ajaxSetup
-		function checkValue() {
-			if(!document.postInfo.nickname.value) {
+		function checkNickValue() {
+			if(!document.getElementById("nickname").value) {
 				alert("닉네임을 입력하세요.");
 				return false;
 			}
-			if(!document.postInfo.currentPassword.value) {
+		}
+		function checkPwValue() {
+			if(!document.getElementById("currentPassword").value) {
 				alert("현재 비밀번호를 입력하세요.");
 				return false;
 			}
-			if(!document.postInfo.newPassword.value) {
+			if(!document.getElementById("newPassword").value) {
 				alert("새 비밀번호를 입력하세요.");
 				return false;
 			}
@@ -77,10 +79,33 @@
             });
 
             $("#updateBtn").click(function () {
-                if (checkValue() == false) {
+                if (checkNickValue() == false) {
                     return false;
                 } else {
                     const nickname = $("#nickname").val();
+                    const data = {
+                        userid: userid,
+                        nickname: nickname,
+                    };
+
+                    $.ajax({
+                        type: "PUT",
+                        url: "/user/update",
+                        data: JSON.stringify(data),
+                        contentType: "application/json; charset=UTF-8",
+                    }).done(function (result) {
+        				alert("정보가 변경되었습니다.");
+        				location.href = "/mypage";
+                    }).fail(function (err) {
+                        alert(JSON.stringify(error));
+                    });
+                }
+            });
+
+            $("#pwUpdateBtn").click(function () {
+                if (checkPwValue() == false) {
+                    return false;
+                } else {
                     const currentPassword = $("#currentPassword").val();
                     const newPassword = $("#newPassword").val();
                     const confirmPassword = $("#confirmPassword").val();
@@ -92,25 +117,21 @@
 
                     const data = {
                         userid: userid,
-                        nickname: nickname,
                         currentPassword: currentPassword,
                         newPassword: newPassword
                     };
 
                     $.ajax({
                         type: "PUT",
-                        url: "/user/update",
+                        url: "/user/pwUpdate",
                         data: JSON.stringify(data),
                         contentType: "application/json; charset=UTF-8",
                     }).done(function (result) {
         				if(result == 0) {
         				    alert("현재 비밀번호가 일치하지 않습니다.");
         				} else if(result == 1) {
-        				    alert("다른 닉네임을 입력해주세요.");
-        				} else if(result == 2) {
         				    alert("새 비밀번호를 다시 입력해주세요.");
-        				    location.href='/';
-        				} else if(result == 3){
+        				} else if(result == 2){
         				    alert("정보가 변경되었습니다.");
         				    location.href = "/mypage";
         				} else {
@@ -135,7 +156,6 @@
 			<a href="#" id="logoutBtn" style="margin: 2%;">로그아웃</a>
 		</div>
 	</div>
-	<form name="postInfo" id="postInfo">
 	<div class="post-container1">
         <div class="post-container2">
         <h4 style="text-align: center;">내 정보
@@ -149,7 +169,7 @@
             <input type="text" id="nickname" class="form-control" style="width: 300px;" />
         </div>
         <div class="input-field"><strong>이메일:</strong></div>
-        <h5>비밀번호 변경</h5>
+        <button type="button" class="btn btn-primary" id="updateBtn">내 정보 업데이트</button>
         <div class="input-field">
             <strong>현재 비밀번호:</strong>
             <input type="password" id="currentPassword" class="form-control" style="width: 300px;" />
@@ -162,9 +182,8 @@
             <strong>비밀번호 확인:</strong>
             <input type="password" id="confirmPassword" class="form-control" style="width: 300px;" />
         </div>
-        <button type="button" class="btn btn-primary" id="updateBtn">변경완료</button>
+        <button type="button" class="btn btn-primary" id="pwUpdateBtn">비밀번호 변경</button>
         </div>
     </div>
-    </form>
 </body>
 </html>

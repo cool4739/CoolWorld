@@ -39,14 +39,15 @@
             const pageSize = 10;
             let loading = false; // 중복 호출 방지용
 
-            function addPost(postid, content, views, comments, likes) {
+            function addPost(postid, content, views, comments, likes, liked) {
+                const heartIcon = liked ? '❤️' : '🖤';
                 let newPost = `
                     <div class="post-container2" style="cursor:pointer;" onclick="location.href='/postinfo/${'${'}postid}'">
                         <div class="post-content">${'${'}content}</div>
                         <div class="post-info">
                             <span>조회수: ${'${'}views}</span>
                             <span>댓글: ${'${'}comments}</span>
-                            <span>🖤 공감: ${'${'}likes}</span>
+                            <span>${'${'}heartIcon} 공감: ${'${'}likes}</span>
                         </div>
                     </div>
                 `;
@@ -70,7 +71,7 @@
                         $(window).off("scroll");
                     } else {
                         data.forEach(function (post) {
-                            addPost(post.postid, post.content, post.views, post.comments, post.likes);
+                            addPost(post.postid, post.content, post.views, post.comments, post.likes, post.liked);
                         });
                         currentPage++;
                     }

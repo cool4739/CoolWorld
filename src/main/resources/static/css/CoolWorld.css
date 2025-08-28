@@ -67,6 +67,13 @@ a {
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
+.post-container3 {
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    width: 50%;
+    min-width: 500px;
+}
 .nickname {
     overflow:hidden;
     text-overflow: ellipsis;
@@ -90,8 +97,8 @@ a {
 .post-info {
     overflow:hidden;
     text-overflow: ellipsis;
-    display: flex;
-    justify-content: space-between;
+    display: flex; /* 자식 요소 가로 배치 */
+    justify-content: space-between; /* 자식 요소들을 컨테이너의 양쪽 끝에 맞춰 배치 */
     font-size: 12px;
     color: #888;
     white-space: pre-wrap;

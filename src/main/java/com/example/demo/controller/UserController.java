@@ -46,8 +46,13 @@ public class UserController {
         return userService.read(user_num, userReadRequestDto);
     }*/
 
+    @PutMapping("/user/pwUpdate") //수정
+    public Long pwUpdate(@RequestBody UserUpdateRequestDto updateRequestDto) {
+        return userService.pwUpdate(updateRequestDto);
+    }
+
     @PutMapping("/user/update") //수정
-    public Long update(@RequestBody UserUpdateRequestDto updateRequestDto) {
+    public User update(@RequestBody UserUpdateRequestDto updateRequestDto) {
         return userService.update(updateRequestDto);
     }
 

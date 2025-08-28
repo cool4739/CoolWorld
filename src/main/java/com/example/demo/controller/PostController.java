@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.dao.Comment;
+import com.example.demo.dao.Likes;
 import com.example.demo.dao.Post;
 import com.example.demo.dto.*;
 import com.example.demo.etc.SessionManager;
@@ -28,20 +30,20 @@ public class PostController {
     }
 
     @GetMapping("/post/read")
-    public ResponseEntity<List<PostReadRequestDto>> read(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        List<PostReadRequestDto> posts = postService.readList(page, size);
+    public ResponseEntity<List<PostReadRequestDto>> read(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request, HttpServletResponse response) {
+        List<PostReadRequestDto> posts = postService.readList(page, size, request, response);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/post/mypostlistread/{userid}")
-    public ResponseEntity<List<PostReadRequestDto>> myPostListRead(@PathVariable String userid, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        List<PostReadRequestDto> posts = postService.myPostListReadList(userid, page, size);
+    public ResponseEntity<List<PostReadRequestDto>> myPostListRead(@PathVariable String userid, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, HttpServletRequest request, HttpServletResponse response) {
+        List<PostReadRequestDto> posts = postService.myPostListReadList(userid, page, size, request, response);
         return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/post/info/{postid}-{userid}")
-    public ResponseEntity<List<PostInfoRequestDto>> info(@PathVariable Long postid, @PathVariable String userid) {
-        List<PostInfoRequestDto> posts = postService.postInfo(postid, userid);
+    public ResponseEntity<List<PostInfoRequestDto>> info(@PathVariable Long postid, @PathVariable String userid, HttpServletRequest request, HttpServletResponse response) {
+        List<PostInfoRequestDto> posts = postService.postInfo(postid, userid, request, response);
         return ResponseEntity.ok(posts);
     }
 
@@ -55,6 +57,28 @@ public class PostController {
     public ResponseEntity<Long> delete(@PathVariable Long postid) {
         postService.delete(postid);
         return ResponseEntity.ok(postid);
+    }
+
+    @PostMapping("/post/comment") // 생성
+    public ResponseEntity<Comment> comment(@RequestBody CommentRegisterRequestDto commentRegisterRequestDto, HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok(postService.commentRegister(commentRegisterRequestDto, request, response));
+    }
+
+    @GetMapping("/post/commentList/{postid}-{userid}")
+    public ResponseEntity<List<CommentReadRequestDto>> getComment(@PathVariable Long postid, @PathVariable String userid) {
+        List<CommentReadRequestDto> commentRead = postService.commentRead(postid, userid);
+        return ResponseEntity.ok(commentRead);
+    }
+
+    @DeleteMapping("/post/commentDelete/{commentid}")
+    public ResponseEntity<Long> commnetDelete(@PathVariable Long commentid) {
+        postService.commentDelete(commentid);
+        return ResponseEntity.ok(commentid);
+    }
+
+    @PostMapping("/post/like") // 생성
+    public ResponseEntity<Likes> like(@RequestBody LikesRequestDto likesRequestDto, HttpServletRequest request, HttpServletResponse response) {
+        return ResponseEntity.ok(postService.like(likesRequestDto, request, response));
     }
 
 }
